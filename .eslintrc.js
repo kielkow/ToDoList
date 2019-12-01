@@ -43,5 +43,7 @@ module.exports = {
     "react/state-in-constructor": 'off',
     'no-console': ['error', { allow: ['tron'] }],
     "no-console": "off",
+    'react/destructuring-assignment': 'off',
+    'react/no-access-state-in-setstate': 'off'
   },
 };
