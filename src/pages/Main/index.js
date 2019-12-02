@@ -31,6 +31,9 @@ import {
   SearchMonthButton,
   SearchWeekButton,
   SearchAllDoneButton,
+  Pagination,
+  Previous,
+  Next,
 } from './styles';
 
 export default class Main extends Component {
@@ -57,6 +60,9 @@ export default class Main extends Component {
     idTaskEdited: '',
     displaySearch: false,
     done: true,
+    page: 1,
+    limit: 5,
+    final: false,
     days: [
       1,
       2,
@@ -99,6 +105,8 @@ export default class Main extends Component {
     const response = await api.get('/tasks', {
       params: {
         done: false,
+        _page: this.state.page,
+        _limit: this.state.limit,
       },
     });
 
@@ -223,8 +231,6 @@ export default class Main extends Component {
       if (newTask.createdDate === '')
         throw new Error('Field createdDate empty');
 
-      if (newTask.tag === '') throw new Error('Field tag empty');
-
       const checkTaskExists = tasks.find(
         task => task.description === newTask.description
       );
@@ -335,6 +341,52 @@ export default class Main extends Component {
         });
   };
 
+  next = async e => {
+    e.preventDefault();
+
+    this.setState({ loading: true });
+    let { page } = this.state;
+
+    page += 1;
+
+    this.setState({ page });
+
+    const response = await api.get('/tasks', {
+      params: {
+        done: false,
+        _page: page,
+        _limit: 5,
+      },
+    });
+
+    if (response.data.length === 0) this.setState({ final: true });
+
+    this.setState({ tasks: response.data, loading: false });
+  };
+
+  previous = async e => {
+    e.preventDefault();
+
+    this.setState({ loading: true });
+    let { page } = this.state;
+
+    if (page !== 1) {
+      page -= 1;
+    }
+
+    this.setState({ page });
+
+    const response = await api.get('/tasks', {
+      params: {
+        done: false,
+        _page: page,
+        _limit: 5,
+      },
+    });
+
+    this.setState({ tasks: response.data, loading: false, final: false });
+  };
+
   handleEdit(taskId) {
     console.log(taskId);
     this.setState({ idTaskEdited: taskId });
@@ -368,6 +420,7 @@ export default class Main extends Component {
         rememberTime: this.state.newTask.rememberTime,
         createdDate: this.state.newTask.createdDate,
         done: false,
+        tag: this.state.newTask.tag,
       });
       const response = await api.get('/tasks', {
         params: {
@@ -493,6 +546,8 @@ export default class Main extends Component {
       const response = await api.get('/tasks', {
         params: {
           done: false,
+          _page: this.state.page,
+          _limit: this.state.limit,
         },
       });
       console.log(response);
@@ -505,7 +560,13 @@ export default class Main extends Component {
     const confirmDelete = window.confirm('Do you want delete this task?');
     if (confirmDelete) {
       await api.delete(`/tasks/${task.id}`);
-      const response = await api.get('/tasks');
+      const response = await api.get('/tasks', {
+        params: {
+          done: false,
+          _page: this.state.page,
+          _limit: this.state.limit,
+        },
+      });
       console.log(response);
       this.setState({ tasks: response.data });
     }
@@ -515,6 +576,8 @@ export default class Main extends Component {
     const response = await api.get('/tasks', {
       params: {
         done: false,
+        _page: this.state.page,
+        _limit: this.state.limit,
       },
     });
 
@@ -532,6 +595,8 @@ export default class Main extends Component {
       displayAdd,
       displayEdit,
       displaySearch,
+      page,
+      final,
       days,
       months,
       years,
@@ -650,6 +715,13 @@ export default class Main extends Component {
             onChange={this.handleInputChangeCreatedDate}
             error={error}
           />
+          <Input
+            type="text"
+            placeholder="#Tag..."
+            value={newTask.tag}
+            onChange={this.handleInputChangeTag}
+            error={error}
+          />
           <SaveButton
             loading={loading}
             onClick={() => this.handleConfirmEdit()}
@@ -715,6 +787,7 @@ export default class Main extends Component {
             <span>Duration</span>
             <span>Remember</span>
             <span>Created</span>
+            <span>#Tag</span>
           </HeaderList>
           {tasks.map(task => (
             <li key={task.id}>
@@ -729,11 +802,31 @@ export default class Main extends Component {
 
               <input type="text" disabled value={task.createdDate} />
 
+              <input type="text" disabled value={task.tag} />
+
               <MdEdit size={22} onClick={() => this.handleEdit(task.id)} />
 
               <MdDelete size={22} onClick={() => this.handleDelete(task)} />
             </li>
           ))}
+          <Pagination>
+            <Previous
+              type="button"
+              onClick={this.previous}
+              page={page}
+              loading={loading}
+            >
+              Previous
+            </Previous>
+            <Next
+              type="button"
+              onClick={this.next}
+              loading={loading}
+              final={final}
+            >
+              Next
+            </Next>
+          </Pagination>
         </List>
       </Container>
     );

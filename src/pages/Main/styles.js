@@ -222,7 +222,7 @@ export const HeaderList = styled.div`
   margin-left: 40px;
 
   span {
-    margin-right: 35px;
+    margin-right: 27px;
   }
 `;
 
@@ -412,4 +412,54 @@ export const SearchAllDoneButton = styled.button.attrs(props => ({
         animation: ${rotate} 2s linear infinite;
       }
     `}
+`;
+
+export const Pagination = styled.div`
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+`;
+
+export const Previous = styled.button.attrs(props => ({
+  type: 'button',
+  disabled: props.page === 1 || props.loading,
+}))`
+  background: #e54d3f;
+  color: #eee;
+  font-style: bold;
+  & + button {
+    margin-left: 10px;
+  }
+  font-size: 17px;
+  float: center;
+  display: flex;
+  padding: 10px 15px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+`;
+
+export const Next = styled.button.attrs(props => ({
+  type: 'button',
+  disabled: props.loading || props.final,
+}))`
+  background: #e54d3f;
+  color: #eee;
+  font-style: bold;
+  & + button {
+    margin-left: 10px;
+  }
+  font-size: 17px;
+  float: center;
+  display: flex;
+  padding: 10px 15px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 `;
