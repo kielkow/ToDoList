@@ -1,49 +1,54 @@
 {
   "tasks": [
     {
-      "id": 1,
       "description": "task 1",
-      "startedDate": "03/06/19",
+      "startedDate": "3/6/2019",
       "duration": "1h",
       "rememberTime": "1h",
-      "createdDate": "01/06/19",
-      "done": false
+      "createdDate": "1/6/2019",
+      "done": false,
+      "tag": "tag1",
+      "id": 1
     },
     {
-      "id": 2,
       "description": "task 2",
-      "startedDate": "03/06/19",
+      "startedDate": "3/6/2019",
       "duration": "1h",
       "rememberTime": "1h",
-      "createdDate": "01/06/19",
-      "done": false
+      "createdDate": "1/6/2019",
+      "done": false,
+      "tag": "tag2",
+      "id": 2
     },
     {
-      "id": 3,
       "description": "task 3",
-      "startedDate": "03/06/19",
+      "startedDate": "3/6/2019",
       "duration": "1h",
       "rememberTime": "1h",
-      "createdDate": "01/06/19",
-      "done": false
+      "createdDate": "1/6/2019",
+      "done": false,
+      "tag": "tag3",
+      "id": 3
     },
     {
-      "id": 4,
       "description": "task 4",
-      "startedDate": "03/06/19",
+      "startedDate": "3/6/2019",
       "duration": "1h",
       "rememberTime": "1h",
-      "createdDate": "01/06/19",
-      "done": false
+      "createdDate": "1/6/2019",
+      "done": false,
+      "tag": "tag4",
+      "id": 4
     },
     {
-      "id": 5,
       "description": "task 5",
-      "startedDate": "03/06/19",
+      "startedDate": "3/6/2019",
       "duration": "1h",
       "rememberTime": "1h",
-      "createdDate": "01/06/19",
-      "done": false
+      "createdDate": "1/6/2019",
+      "done": false,
+      "tag": "tag5",
+      "id": 5
     }
   ]
 }

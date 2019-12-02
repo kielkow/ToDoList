@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable no-unused-expressions */
 import React, { Component } from 'react';
 import {
@@ -8,9 +10,8 @@ import {
   FaSave,
   FaCheckCircle,
 } from 'react-icons/fa';
-import { MdEdit, MdDelete, MdDoneAll } from 'react-icons/md';
-import { FiThumbsUp } from 'react-icons/fi';
-import { AiOutlineFileSearch } from 'react-icons/ai';
+import { MdEdit, MdDelete, MdSearch, MdDoneAll } from 'react-icons/md';
+// import { startOfWeek, endOfWeek } from 'date-fns';
 
 import api from '../../services/api';
 
@@ -23,9 +24,13 @@ import {
   Input,
   HeaderList,
   FormAdd,
+  FormEdit,
   FormSearch,
   SaveButton,
-  EditButton,
+  SearchTodayButton,
+  SearchMonthButton,
+  SearchWeekButton,
+  SearchAllDoneButton,
 } from './styles';
 
 export default class Main extends Component {
@@ -36,15 +41,57 @@ export default class Main extends Component {
       duration: '',
       rememberTime: '',
       createdDate: '',
+      done: false,
+      tag: '',
+    },
+    newSearch: {
+      day: '',
+      month: '',
+      year: '',
     },
     tasks: [],
     loading: false,
     error: false,
     displayAdd: false,
+    displayEdit: false,
+    idTaskEdited: '',
     displaySearch: false,
-    readOnly: true,
-    confirmEdit: false,
     done: true,
+    days: [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+    ],
+    months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    years: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019],
   };
 
   // Carregar os dados do localStorage
@@ -81,6 +128,7 @@ export default class Main extends Component {
         duration: this.state.newTask.duration,
         rememberTime: this.state.newTask.rememberTime,
         createdDate: this.state.newTask.createdDate,
+        done: false,
       },
     });
   };
@@ -93,6 +141,7 @@ export default class Main extends Component {
         duration: this.state.newTask.duration,
         rememberTime: this.state.newTask.rememberTime,
         createdDate: this.state.newTask.createdDate,
+        done: false,
       },
     });
   };
@@ -105,6 +154,7 @@ export default class Main extends Component {
         duration: e.target.value,
         rememberTime: this.state.newTask.rememberTime,
         createdDate: this.state.newTask.createdDate,
+        done: false,
       },
     });
   };
@@ -117,6 +167,7 @@ export default class Main extends Component {
         duration: this.state.newTask.duration,
         rememberTime: e.target.value,
         createdDate: this.state.newTask.createdDate,
+        done: false,
       },
     });
   };
@@ -129,6 +180,21 @@ export default class Main extends Component {
         duration: this.state.newTask.duration,
         rememberTime: this.state.newTask.rememberTime,
         createdDate: e.target.value,
+        done: false,
+      },
+    });
+  };
+
+  handleInputChangeTag = e => {
+    this.setState({
+      newTask: {
+        description: this.state.newTask.description,
+        startedDate: this.state.newTask.startedDate,
+        duration: this.state.newTask.duration,
+        rememberTime: this.state.newTask.rememberTime,
+        createdDate: this.state.newTask.createdDate,
+        done: false,
+        tag: e.target.value,
       },
     });
   };
@@ -157,13 +223,17 @@ export default class Main extends Component {
       if (newTask.createdDate === '')
         throw new Error('Field createdDate empty');
 
+      if (newTask.tag === '') throw new Error('Field tag empty');
+
       const checkTaskExists = tasks.find(
         task => task.description === newTask.description
       );
 
-      if (checkTaskExists) throw new Error('Task alreadOnlyy exists');
+      if (checkTaskExists) throw new Error('Task already exists');
 
       const data = newTask;
+
+      console.log(data);
 
       await api.post('/tasks', data);
 
@@ -176,6 +246,7 @@ export default class Main extends Component {
           rememberTime: '',
           createdDate: '',
           done: false,
+          tag: '',
         },
         loading: false,
         error: false,
@@ -189,6 +260,8 @@ export default class Main extends Component {
           duration: '',
           rememberTime: '',
           createdDate: '',
+          done: false,
+          tag: '',
         },
         loading: false,
         error: true,
@@ -196,39 +269,197 @@ export default class Main extends Component {
     }
   };
 
-  handleSearch = async e => {
-    e.preventDefault();
-
-    this.setState({ loading: true });
+  handleChangeDay = async e => {
+    this.setState({
+      newSearch: {
+        day: e.target.value,
+        month: this.state.newSearch.month,
+        year: this.state.newSearch.year,
+      },
+    });
   };
 
-  showFormAdd = async e => {
+  handleChangeMonth = async e => {
+    this.setState({
+      newSearch: {
+        day: this.state.newSearch.day,
+        month: e.target.value,
+        year: this.state.newSearch.year,
+      },
+    });
+  };
+
+  handleChangeYear = e => {
+    this.setState({
+      newSearch: {
+        day: this.state.newSearch.day,
+        month: this.state.newSearch.month,
+        year: e.target.value,
+      },
+    });
+  };
+
+  showFormAdd = e => {
     e.preventDefault();
 
     const { displayAdd } = this.state;
 
     displayAdd
-      ? this.setState({ displayAdd: false, displaySearch: false })
-      : this.setState({ displayAdd: true, displaySearch: false });
+      ? this.setState({
+          displayAdd: false,
+          displaySearch: false,
+          displayEdit: false,
+        })
+      : this.setState({
+          displayAdd: true,
+          displaySearch: false,
+          displayEdit: false,
+        });
   };
 
-  showFormSearch = async e => {
+  showFormSearch = e => {
     e.preventDefault();
 
     const { displaySearch } = this.state;
 
     displaySearch
-      ? this.setState({ displaySearch: false, displayAdd: false })
-      : this.setState({ displaySearch: true, displayAdd: false });
+      ? this.setState({
+          displaySearch: false,
+          displayAdd: false,
+          displayEdit: false,
+        })
+      : this.setState({
+          displaySearch: true,
+          displayAdd: false,
+          displayEdit: false,
+        });
   };
 
-  handleEdit = () => {
-    this.setState({ confirmEdit: true, readOnly: false });
-  };
+  handleEdit(taskId) {
+    console.log(taskId);
+    this.setState({ idTaskEdited: taskId });
 
-  handleConfirmEdit = () => {
-    this.setState({ confirmEdit: false, readOnly: true });
-  };
+    const { displayEdit } = this.state;
+
+    displayEdit
+      ? this.setState({
+          displayAdd: false,
+          displaySearch: false,
+          displayEdit: false,
+        })
+      : this.setState({
+          displayAdd: false,
+          displaySearch: false,
+          displayEdit: true,
+        });
+  }
+
+  async handleConfirmEdit() {
+    // eslint-disable-next-line no-alert
+    const confirmDone = window.confirm('Do you want edit this task?');
+    const { idTaskEdited } = this.state;
+    console.log(this.state.newTask);
+    if (confirmDone) {
+      await api.put(`/tasks/${idTaskEdited}`, {
+        id: idTaskEdited,
+        description: this.state.newTask.description,
+        startedDate: this.state.newTask.startedDate,
+        duration: this.state.newTask.duration,
+        rememberTime: this.state.newTask.rememberTime,
+        createdDate: this.state.newTask.createdDate,
+        done: false,
+      });
+      const response = await api.get('/tasks', {
+        params: {
+          done: false,
+        },
+      });
+      console.log(response);
+      this.setState({ tasks: response.data });
+    }
+  }
+
+  async handleSearch() {
+    const { newSearch } = this.state;
+
+    console.log(newSearch);
+
+    const response = await api.get('/tasks', {
+      params: {
+        startedDate: `${newSearch.day}/${newSearch.month}/${newSearch.year}`,
+      },
+    });
+
+    console.log(response);
+
+    this.setState({ tasks: response.data });
+  }
+
+  async handleSearchToday() {
+    const today = new Date();
+
+    const response = await api.get('/tasks', {
+      params: {
+        startedDate: `${today.getDate()}/${today.getMonth() +
+          1}/${today.getFullYear()}`,
+        done: false,
+      },
+    });
+
+    console.log(response);
+
+    this.setState({ tasks: response.data });
+  }
+
+  async handleSearchThisweek() {
+    const today = new Date();
+
+    const response = await api.get('/tasks', {
+      params: {
+        startedDate: `${today.getDate()}/${today.getMonth() +
+          1}/${today.getFullYear()}`,
+      },
+    });
+
+    console.log(response);
+
+    this.setState({ tasks: response.data });
+  }
+
+  async handleSearchThisMonth() {
+    const data = await api.get('/tasks', {
+      params: {
+        done: false,
+      },
+    });
+    console.log(data);
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1;
+
+    const tasks = data.data.filter(task => {
+      if (task.startedDate.length === 9) {
+        const monthTask = task.startedDate.slice(2, 4);
+        if (Number(monthTask) === currentMonth) {
+          return task;
+        }
+      }
+      if (task.startedDate.length > 9) {
+        const monthTask = task.startedDate.slice(3, 5);
+        if (Number(monthTask) === currentMonth) {
+          return task;
+        }
+      }
+      const monthTask = task.startedDate.slice(2, 3);
+      if (Number(monthTask) === currentMonth) {
+        return task;
+      }
+      return '';
+    });
+
+    console.log(tasks);
+
+    this.setState({ tasks });
+  }
 
   async handleAllDone() {
     const { done } = this.state;
@@ -280,6 +511,18 @@ export default class Main extends Component {
     }
   }
 
+  async handleReload() {
+    const response = await api.get('/tasks', {
+      params: {
+        done: false,
+      },
+    });
+
+    console.log(response.data);
+
+    this.setState({ tasks: response.data });
+  }
+
   render() {
     const {
       newTask,
@@ -287,14 +530,16 @@ export default class Main extends Component {
       loading,
       error,
       displayAdd,
+      displayEdit,
       displaySearch,
-      readOnly,
-      confirmEdit,
+      days,
+      months,
+      years,
     } = this.state;
 
     return (
       <Container>
-        <h1>
+        <h1 onClick={() => this.handleReload()}>
           <FaTasks />
           Taks
         </h1>
@@ -353,6 +598,13 @@ export default class Main extends Component {
             onChange={this.handleInputChangeCreatedDate}
             error={error}
           />
+          <Input
+            type="text"
+            placeholder="#..."
+            value={newTask.tag}
+            onChange={this.handleInputChangeTag}
+            error={error}
+          />
           <SaveButton loading={loading} onClick={this.handleSubmit}>
             {loading ? (
               <FaSpinner color="#FFF" size={14} />
@@ -362,33 +614,33 @@ export default class Main extends Component {
           </SaveButton>
         </FormAdd>
 
-        <FormSearch onSubmit={this.handleSearch} displaySearch={displaySearch}>
+        <FormEdit displayEdit={displayEdit}>
           <Input
             type="text"
             placeholder="Description..."
             value={newTask.description}
-            onChange={this.handleInputChange}
+            onChange={this.handleInputChangeDescription}
             error={error}
           />
           <Input
             type="text"
-            placeholder="Started Date..."
+            placeholder="Started date..."
             value={newTask.startedDate}
-            onChange={this.handleInputChange}
+            onChange={this.handleInputChangeStartedDate}
             error={error}
           />
           <Input
             type="text"
             placeholder="Duration..."
             value={newTask.duration}
-            onChange={this.handleInputChange}
+            onChange={this.handleInputChangeDuration}
             error={error}
           />
           <Input
             type="text"
             placeholder="Remember time..."
             value={newTask.rememberTime}
-            onChange={this.handleInputChange}
+            onChange={this.handleInputChangeRememberTime}
             error={error}
           />
           <Input
@@ -398,16 +650,62 @@ export default class Main extends Component {
             onChange={this.handleInputChangeCreatedDate}
             error={error}
           />
-
-          <SaveButton loading={loading}>
+          <SaveButton
+            loading={loading}
+            onClick={() => this.handleConfirmEdit()}
+          >
             {loading ? (
               <FaSpinner color="#FFF" size={14} />
             ) : (
-              <AiOutlineFileSearch color="#FFF" size={14} />
+              <MdDoneAll color="#FFF" size={24} />
             )}
           </SaveButton>
+        </FormEdit>
 
-          <MdDoneAll size={28} onClick={() => this.handleAllDone()} />
+        <FormSearch displaySearch={displaySearch}>
+          <div>
+            <span>Day</span>
+            <select onChange={this.handleChangeDay}>
+              {days.map(day => (
+                <option
+                  value={day}
+                  onChange={this.handleInputChangeDescription}
+                >
+                  {day}
+                </option>
+              ))}
+            </select>
+
+            <span>Month</span>
+            <select onChange={this.handleChangeMonth}>
+              {months.map(month => (
+                <option value={month}>{month}</option>
+              ))}
+            </select>
+
+            <span>Year</span>
+            <select onChange={this.handleChangeYear}>
+              {years.map(year => (
+                <option value={year}>{year}</option>
+              ))}
+            </select>
+            <MdSearch size={28} onClick={() => this.handleSearch()} />
+          </div>
+
+          <div>
+            <SearchTodayButton onClick={() => this.handleSearchToday()}>
+              Today
+            </SearchTodayButton>
+            <SearchWeekButton onClick={() => this.handleSearchThisweek()}>
+              This Week
+            </SearchWeekButton>
+            <SearchMonthButton onClick={() => this.handleSearchThisMonth()}>
+              This Month
+            </SearchMonthButton>
+            <SearchAllDoneButton onClick={() => this.handleAllDone()}>
+              All tasks done
+            </SearchAllDoneButton>
+          </div>
         </FormSearch>
 
         <List>
@@ -421,51 +719,17 @@ export default class Main extends Component {
           {tasks.map(task => (
             <li key={task.id}>
               <FaCheckCircle size={18} onClick={() => this.handleDone(task)} />
-              <input
-                type="text"
-                value={readOnly ? task.description : null}
-                readOnly={readOnly}
-                done={task.done}
-              />
+              <input type="text" disabled value={task.description} />
 
-              <input
-                type="text"
-                value={readOnly ? task.startedDate : null}
-                readOnly={readOnly}
-                done={task.done}
-              />
+              <input type="text" disabled value={task.startedDate} />
 
-              <input
-                type="text"
-                value={readOnly ? task.duration : null}
-                readOnly={readOnly}
-                done={task.done}
-              />
+              <input type="text" disabled value={task.duration} />
 
-              <input
-                type="text"
-                value={readOnly ? task.rememberTime : null}
-                readOnly={readOnly}
-                done={task.done}
-              />
+              <input type="text" disabled value={task.rememberTime} />
 
-              <input
-                type="text"
-                value={readOnly ? task.createdDate : null}
-                readOnly={readOnly}
-                done={task.done}
-              />
+              <input type="text" disabled value={task.createdDate} />
 
-              <EditButton confirmEdit={confirmEdit}>
-                {confirmEdit ? (
-                  <FiThumbsUp
-                    size={22}
-                    onClick={() => this.handleConfirmEdit()}
-                  />
-                ) : (
-                  <MdEdit size={22} onClick={() => this.handleEdit()} />
-                )}
-              </EditButton>
+              <MdEdit size={22} onClick={() => this.handleEdit(task.id)} />
 
               <MdDelete size={22} onClick={() => this.handleDelete(task)} />
             </li>

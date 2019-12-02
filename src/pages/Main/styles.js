@@ -24,8 +24,8 @@ export const FormAdd = styled.form.attrs(props => ({
     `}
 `;
 
-export const FormSearch = styled.form.attrs(props => ({
-  displaySearch: props.displaySearch,
+export const FormEdit = styled.form.attrs(props => ({
+  displayedit: props.displayEdit,
 }))`
   margin-top: 30px;
   display: flex;
@@ -33,6 +33,53 @@ export const FormSearch = styled.form.attrs(props => ({
 
   input {
     margin-bottom: 10px;
+  }
+
+  ${props =>
+    !props.displayEdit &&
+    css`
+      display: none;
+    `}
+`;
+
+export const FormSearch = styled.form.attrs(props => ({
+  displaySearch: props.displaySearch,
+}))`
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+
+  div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+
+    span {
+      font-size: 16px;
+      font-weight: bold;
+      color: #000;
+      margin-right: 5px;
+    }
+
+    select {
+      width: 70px;
+      border: 1px solid #d4c3c3;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-right: 20px;
+    }
+
+    p {
+      font-size: 15px;
+      color: #000;
+      margin-right: 20px;
+    }
+
+    & + div {
+      border-top: 1px solid #eee;
+      padding-top: 15px;
+    }
   }
 
   ${props =>
@@ -45,7 +92,7 @@ export const FormSearch = styled.form.attrs(props => ({
     cursor: pointer;
     transition: all 0.1s ease-in-out;
     color: #000;
-    margin-top: 15px;
+    margin-left: 60px;
 
     &:hover {
       color: #e54d3f;
@@ -165,13 +212,6 @@ export const SaveButton = styled.button.attrs(props => ({
     `}
 `;
 
-export const EditButton = styled.button.attrs(props => ({
-  confirmEdit: props.confirmEdit,
-}))`
-  background: #fff;
-  border: 0;
-`;
-
 export const HeaderList = styled.div`
   display: inline-block;
   color: #000;
@@ -186,10 +226,7 @@ export const HeaderList = styled.div`
   }
 `;
 
-export const List = styled.ul.attrs(props => ({
-  readOnly: props.readOnly,
-  done: props.done,
-}))`
+export const List = styled.ul`
   list-style: none;
   margin-top: 30px;
 
@@ -230,4 +267,149 @@ export const List = styled.ul.attrs(props => ({
       }
     }
   }
+`;
+
+export const SearchTodayButton = styled.button.attrs(props => ({
+  type: 'button',
+  disabled: props.loading,
+}))`
+  background: #e54d3f;
+  border: 0;
+  width: 70px;
+  height: 40px;
+  border-radius: 4px;
+  margin-right: 20px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 5px;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+
+  &:hover {
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  ${props =>
+    props.loading &&
+    css`
+      svg {
+        animation: ${rotate} 2s linear infinite;
+      }
+    `}
+`;
+
+export const SearchWeekButton = styled.button.attrs(props => ({
+  type: 'button',
+  disabled: props.loading,
+}))`
+  background: #e54d3f;
+  border: 0;
+  width: 100px;
+  height: 40px;
+  border-radius: 4px;
+  margin-right: 20px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 5px;
+  transition: all 0.1s ease-in-out;
+
+  &:hover {
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  ${props =>
+    props.loading &&
+    css`
+      svg {
+        animation: ${rotate} 2s linear infinite;
+      }
+    `}
+`;
+
+export const SearchMonthButton = styled.button.attrs(props => ({
+  type: 'button',
+  disabled: props.loading,
+}))`
+  background: #e54d3f;
+  border: 0;
+  width: 100px;
+  height: 40px;
+  border-radius: 4px;
+  margin-right: 20px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 5px;
+  transition: all 0.1s ease-in-out;
+
+  &:hover {
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  ${props =>
+    props.loading &&
+    css`
+      svg {
+        animation: ${rotate} 2s linear infinite;
+      }
+    `}
+`;
+
+export const SearchAllDoneButton = styled.button.attrs(props => ({
+  type: 'button',
+  disabled: props.loading,
+}))`
+  background: #e54d3f;
+  border: 0;
+  width: 150px;
+  height: 40px;
+  border-radius: 4px;
+  margin-left: 100px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 5px;
+  transition: all 0.1s ease-in-out;
+
+  &:hover {
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  ${props =>
+    props.loading &&
+    css`
+      svg {
+        animation: ${rotate} 2s linear infinite;
+      }
+    `}
 `;
