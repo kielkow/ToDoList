@@ -103,6 +103,20 @@ export const FormSearch = styled.form.attrs(props => ({
   }
 `;
 
+export const FormChart = styled.form.attrs(props => ({
+  displayChart: props.displayChart,
+}))`
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+
+  ${props =>
+    !props.displayChart &&
+    css`
+      display: none;
+    `}
+`;
+
 export const Input = styled.input.attrs(props => ({
   error: props.error,
 }))`
@@ -159,6 +173,36 @@ export const SubmitButton = styled.button.attrs(props => ({
 `;
 
 export const SearchButton = styled.button.attrs(props => ({
+  type: 'submit',
+  disabled: props.loading,
+}))`
+  background: #e54d3f;
+  border: 0;
+  padding: 0 15px;
+  margin-left: 10px;
+  border-radius: 4px;
+  width: 50px;
+  height: 40px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  ${props =>
+    props.loading &&
+    css`
+      svg {
+        animation: ${rotate} 2s linear infinite;
+      }
+    `}
+`;
+
+export const GraphButton = styled.button.attrs(props => ({
   type: 'submit',
   disabled: props.loading,
 }))`

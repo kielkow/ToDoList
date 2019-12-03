@@ -11,21 +11,27 @@ import {
   FaCheckCircle,
 } from 'react-icons/fa';
 import { MdEdit, MdDelete, MdSearch, MdDoneAll } from 'react-icons/md';
+import { GoGraph } from 'react-icons/go';
+
 // import { startOfWeek, endOfWeek } from 'date-fns';
 
 import api from '../../services/api';
 
 import Container from '../../components/Container';
+import Chart from '../../components/Chart/index';
+
 import {
   Form,
   SubmitButton,
   SearchButton,
+  GraphButton,
   List,
   Input,
   HeaderList,
   FormAdd,
   FormEdit,
   FormSearch,
+  FormChart,
   SaveButton,
   SearchTodayButton,
   SearchMonthButton,
@@ -51,15 +57,19 @@ export default class Main extends Component {
       day: '',
       month: '',
       year: '',
+      tag: '',
     },
     tasks: [],
+    tags: [],
     loading: false,
     error: false,
     displayAdd: false,
     displayEdit: false,
     idTaskEdited: '',
     displaySearch: false,
-    done: true,
+    displayChart: false,
+    done: 0,
+    notDone: 0,
     page: 1,
     limit: 5,
     final: false,
@@ -98,25 +108,81 @@ export default class Main extends Component {
     ],
     months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     years: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019],
+    chartData: {
+      labels: ['Done', 'Not Done'],
+      datasets: [
+        {
+          label: 'tasks',
+          data: [0, 0],
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.6)',
+            'rgba(255, 99, 132, 0.6)',
+          ],
+        },
+      ],
+    },
   };
 
   // Carregar os dados do localStorage
   async componentDidMount() {
-    const response = await api.get('/tasks', {
-      params: {
-        done: false,
-        _page: this.state.page,
-        _limit: this.state.limit,
+    const [done, notDone, tasks, tags] = await Promise.all([
+      api.get('/tasks', {
+        params: {
+          done: true,
+        },
+      }),
+      api.get('/tasks', {
+        params: {
+          done: false,
+        },
+      }),
+      api.get('/tasks', {
+        params: {
+          done: false,
+          _page: this.state.page,
+          _limit: this.state.limit,
+        },
+      }),
+      api.get('/tasks'),
+    ]);
+
+    console.log(done.data);
+    console.log(notDone.data);
+    console.log(tasks.data);
+    console.log(tags.data);
+
+    this.setState({ done: done.data.length });
+    console.log(this.state.done);
+    this.setState({ notDone: notDone.data.length });
+    console.log(this.state.notDone);
+
+    this.setState({
+      chartData: {
+        labels: ['Done', 'Not Done'],
+        datasets: [
+          {
+            label: 'tasks',
+            data: [this.state.done, this.state.notDone],
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(255, 99, 132, 0.6)',
+            ],
+          },
+        ],
       },
     });
 
-    console.log(response.data);
-
-    const data = response.data.map(task => ({
+    const tasksData = tasks.data.map(task => ({
       ...task,
     }));
+    this.setState({ tasks: tasksData });
 
-    this.setState({ tasks: data });
+    const tagsData = tags.data.map(task => task.tag);
+    this.setState({ tags: tagsData });
+
+    Notification.requestPermission().then(result => {
+      console.log(result);
+    });
   }
 
   // Salvar os dados do localStorage
@@ -126,6 +192,26 @@ export default class Main extends Component {
     if (prevState.tasks !== tasks) {
       localStorage.setItem('tasks', JSON.stringify(tasks));
     }
+  }
+
+  setChartData() {
+    console.log(this.state.chartData);
+    this.setState({
+      chartData: {
+        labels: ['Done', 'Not Done'],
+        datasets: [
+          {
+            label: 'tasks',
+            data: [this.state.done, this.state.notDone],
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(255, 99, 132, 0.6)',
+            ],
+          },
+        ],
+      },
+    });
+    console.log(this.state.chartData);
   }
 
   handleInputChangeDescription = e => {
@@ -243,6 +329,9 @@ export default class Main extends Component {
 
       await api.post('/tasks', data);
 
+      // eslint-disable-next-line no-new
+      new Notification(`Tarefa ${data.description} criada`);
+
       this.setState({
         tasks: [...tasks, data],
         newTask: {
@@ -281,6 +370,7 @@ export default class Main extends Component {
         day: e.target.value,
         month: this.state.newSearch.month,
         year: this.state.newSearch.year,
+        tag: this.state.newSearch.tag,
       },
     });
   };
@@ -291,6 +381,7 @@ export default class Main extends Component {
         day: this.state.newSearch.day,
         month: e.target.value,
         year: this.state.newSearch.year,
+        tag: this.state.newSearch.tag,
       },
     });
   };
@@ -301,6 +392,18 @@ export default class Main extends Component {
         day: this.state.newSearch.day,
         month: this.state.newSearch.month,
         year: e.target.value,
+        tag: this.state.newSearch.tag,
+      },
+    });
+  };
+
+  handleChangeTag = e => {
+    this.setState({
+      newSearch: {
+        day: this.state.newSearch.day,
+        month: this.state.newSearch.month,
+        year: this.state.newSearch.year,
+        tag: e.target.value,
       },
     });
   };
@@ -315,11 +418,13 @@ export default class Main extends Component {
           displayAdd: false,
           displaySearch: false,
           displayEdit: false,
+          displayChart: false,
         })
       : this.setState({
           displayAdd: true,
           displaySearch: false,
           displayEdit: false,
+          displayChart: false,
         });
   };
 
@@ -333,11 +438,37 @@ export default class Main extends Component {
           displaySearch: false,
           displayAdd: false,
           displayEdit: false,
+          displayChart: false,
         })
       : this.setState({
           displaySearch: true,
           displayAdd: false,
           displayEdit: false,
+          displayChart: false,
+        });
+  };
+
+  showFormGraph = e => {
+    e.preventDefault();
+
+    console.log(this.state.chartData);
+
+    this.setChartData();
+
+    const { displayChart } = this.state;
+
+    displayChart
+      ? this.setState({
+          displaySearch: false,
+          displayAdd: false,
+          displayEdit: false,
+          displayChart: false,
+        })
+      : this.setState({
+          displaySearch: false,
+          displayAdd: false,
+          displayEdit: false,
+          displayChart: true,
         });
   };
 
@@ -398,10 +529,12 @@ export default class Main extends Component {
           displayAdd: false,
           displaySearch: false,
           displayEdit: false,
+          displayChart: false,
         })
       : this.setState({
           displayAdd: false,
           displaySearch: false,
+          displayChart: false,
           displayEdit: true,
         });
   }
@@ -437,15 +570,29 @@ export default class Main extends Component {
 
     console.log(newSearch);
 
-    const response = await api.get('/tasks', {
-      params: {
-        startedDate: `${newSearch.day}/${newSearch.month}/${newSearch.year}`,
-      },
-    });
+    if (
+      newSearch.day === '' &&
+      newSearch.month === '' &&
+      newSearch.year === ''
+    ) {
+      const response = await api.get('/tasks', {
+        params: {
+          tag: newSearch.tag,
+        },
+      });
+      console.log(response);
 
-    console.log(response);
+      this.setState({ tasks: response.data });
+    } else {
+      const response = await api.get('/tasks', {
+        params: {
+          startedDate: `${newSearch.day}/${newSearch.month}/${newSearch.year}`,
+        },
+      });
+      console.log(response);
 
-    this.setState({ tasks: response.data });
+      this.setState({ tasks: response.data });
+    }
   }
 
   async handleSearchToday() {
@@ -542,6 +689,7 @@ export default class Main extends Component {
         rememberTime: task.rememberTime,
         createdDate: task.createdDate,
         done: true,
+        tag: task.tag,
       });
       const response = await api.get('/tasks', {
         params: {
@@ -595,11 +743,14 @@ export default class Main extends Component {
       displayAdd,
       displayEdit,
       displaySearch,
+      displayChart,
+      chartData,
       page,
       final,
       days,
       months,
       years,
+      tags,
     } = this.state;
 
     return (
@@ -625,6 +776,14 @@ export default class Main extends Component {
               <FaSearch color="#FFF" size={14} />
             )}
           </SearchButton>
+
+          <GraphButton loading={loading} onClick={this.showFormGraph}>
+            {loading ? (
+              <FaSpinner color="#FFF" size={14} />
+            ) : (
+              <GoGraph color="#FFF" size={16} />
+            )}
+          </GraphButton>
         </Form>
 
         <FormAdd onSubmit={this.handleSubmit} displayAdd={displayAdd}>
@@ -738,6 +897,7 @@ export default class Main extends Component {
           <div>
             <span>Day</span>
             <select onChange={this.handleChangeDay}>
+              <option value="">None</option>
               {days.map(day => (
                 <option
                   value={day}
@@ -750,6 +910,7 @@ export default class Main extends Component {
 
             <span>Month</span>
             <select onChange={this.handleChangeMonth}>
+              <option value="">None</option>
               {months.map(month => (
                 <option value={month}>{month}</option>
               ))}
@@ -757,8 +918,17 @@ export default class Main extends Component {
 
             <span>Year</span>
             <select onChange={this.handleChangeYear}>
+              <option value="">None</option>
               {years.map(year => (
                 <option value={year}>{year}</option>
+              ))}
+            </select>
+
+            <span>#Tag</span>
+            <select onChange={this.handleChangeTag}>
+              <option value="">None</option>
+              {tags.map(tag => (
+                <option value={tag}>{tag}</option>
               ))}
             </select>
             <MdSearch size={28} onClick={() => this.handleSearch()} />
@@ -779,6 +949,10 @@ export default class Main extends Component {
             </SearchAllDoneButton>
           </div>
         </FormSearch>
+
+        <FormChart displayChart={displayChart}>
+          <Chart chartData={chartData} />
+        </FormChart>
 
         <List>
           <HeaderList>

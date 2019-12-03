@@ -8,7 +8,7 @@
       "rememberTime": "1h",
       "createdDate": "1/6/2019",
       "done": false,
-      "tag": "#teste"
+      "tag": "tag2"
     },
     {
       "description": "task 2",
@@ -17,38 +17,27 @@
       "rememberTime": "1h",
       "createdDate": "1/6/2019",
       "done": false,
-      "tag": "#tag2",
+      "tag": "tag2",
       "id": 2
     },
     {
-      "description": "task 3",
-      "startedDate": "3/6/2019",
-      "duration": "1h",
-      "rememberTime": "1h",
-      "createdDate": "1/6/2019",
-      "done": false,
-      "tag": "#tag3",
-      "id": 3
-    },
-    {
+      "id": 4,
       "description": "task 4",
       "startedDate": "3/6/2019",
       "duration": "1h",
       "rememberTime": "1h",
       "createdDate": "1/6/2019",
-      "done": false,
-      "tag": "#tag4",
-      "id": 4
+      "done": true
     },
     {
-      "description": "task 5",
-      "startedDate": "3/6/2019",
+      "id": 5,
+      "description": "teste 5",
+      "startedDate": "1/6/2019",
       "duration": "1h",
       "rememberTime": "1h",
       "createdDate": "1/6/2019",
       "done": false,
-      "tag": "#tag5",
-      "id": 5
+      "tag": "teste5"
     },
     {
       "id": 6,
@@ -57,8 +46,7 @@
       "duration": "1h",
       "rememberTime": "1h",
       "createdDate": "1/6/2019",
-      "done": false,
-      "tag": "#tag6"
+      "done": true
     },
     {
       "id": 7,
@@ -67,8 +55,7 @@
       "duration": "1h",
       "rememberTime": "1h",
       "createdDate": "1/6/2019",
-      "done": false,
-      "tag": "#tag7"
+      "done": true
     },
     {
       "id": 8,
@@ -78,7 +65,7 @@
       "rememberTime": "1h",
       "createdDate": "1/6/2019",
       "done": false,
-      "tag": "#tag8"
+      "tag": "tag8"
     },
     {
       "id": 9,
@@ -88,17 +75,36 @@
       "rememberTime": "1h",
       "createdDate": "1/6/2019",
       "done": false,
-      "tag": "#tag9"
+      "tag": "tag9"
     },
     {
       "id": 10,
-      "description": "task 10",
+      "description": "teste 10",
       "startedDate": "3/12/2019",
       "duration": "1h",
       "rememberTime": "1h",
       "createdDate": "1/6/2019",
       "done": false,
-      "tag": "#tag10"
+      "tag": "teste10"
+    },
+    {
+      "id": 11,
+      "description": "task 8",
+      "startedDate": "3/12/2019",
+      "duration": "1h",
+      "rememberTime": "1h",
+      "createdDate": "1/6/2019",
+      "done": true
+    },
+    {
+      "description": "task 9",
+      "startedDate": "2/12/2019",
+      "duration": "30min",
+      "rememberTime": "15min",
+      "createdDate": "1/12/2019",
+      "done": false,
+      "tag": "task9",
+      "id": 12
     }
   ]
 }
