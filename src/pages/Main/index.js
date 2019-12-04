@@ -113,10 +113,25 @@ export default class Main extends Component {
       datasets: [
         {
           label: 'tasks',
-          data: [0, 0],
+          data: [4, 7],
           backgroundColor: [
             'rgba(54, 162, 235, 0.6)',
             'rgba(255, 99, 132, 0.6)',
+          ],
+        },
+      ],
+    },
+    chartDataBar: {
+      labels: ['School', 'Family', 'Job', 'Friends'],
+      datasets: [
+        {
+          label: 'Tasks solved by tag',
+          data: [3, 2, 4, 1],
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.6)',
+            'rgba(54, 15, 235, 0.6)',
+            'rgba(54, 80, 80, 0.6)',
+            'rgba(120, 80, 10, 0.6)',
           ],
         },
       ],
@@ -156,21 +171,7 @@ export default class Main extends Component {
     this.setState({ notDone: notDone.data.length });
     console.log(this.state.notDone);
 
-    this.setState({
-      chartData: {
-        labels: ['Done', 'Not Done'],
-        datasets: [
-          {
-            label: 'tasks',
-            data: [this.state.done, this.state.notDone],
-            backgroundColor: [
-              'rgba(54, 162, 235, 0.6)',
-              'rgba(255, 99, 132, 0.6)',
-            ],
-          },
-        ],
-      },
-    });
+    this.setChartData();
 
     const tasksData = tasks.data.map(task => ({
       ...task,
@@ -178,7 +179,9 @@ export default class Main extends Component {
     this.setState({ tasks: tasksData });
 
     const tagsData = tags.data.map(task => task.tag);
-    this.setState({ tags: tagsData });
+    const noRepeatedTags = [...new Set(tagsData)];
+    console.log(noRepeatedTags);
+    this.setState({ tags: noRepeatedTags });
 
     Notification.requestPermission().then(result => {
       console.log(result);
@@ -206,6 +209,24 @@ export default class Main extends Component {
             backgroundColor: [
               'rgba(54, 162, 235, 0.6)',
               'rgba(255, 99, 132, 0.6)',
+            ],
+          },
+        ],
+      },
+    });
+    this.setState({
+      chartDataBar: {
+        labels: ['Job', 'School', 'Family', 'Mine', 'Friends'],
+        datasets: [
+          {
+            label: 'Tasks',
+            data: [2, 4, 1, 2, 2],
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(54, 15, 235, 0.6)',
+              'rgba(54, 80, 80, 0.6)',
+              'rgba(120, 80, 10, 0.6)',
+              'rgba(30, 130, 15, 0.6)',
             ],
           },
         ],
@@ -411,6 +432,18 @@ export default class Main extends Component {
   showFormAdd = e => {
     e.preventDefault();
 
+    this.setState({
+      newTask: {
+        description: '',
+        startedDate: '',
+        duration: '',
+        rememberTime: '',
+        createdDate: '',
+        done: false,
+        tag: '',
+      },
+    });
+
     const { displayAdd } = this.state;
 
     displayAdd
@@ -490,9 +523,15 @@ export default class Main extends Component {
       },
     });
 
-    if (response.data.length === 0) this.setState({ final: true });
+    if (response.data.length !== 0) {
+      this.setState({ tasks: response.data, loading: false });
+    } else {
+      page -= 1;
 
-    this.setState({ tasks: response.data, loading: false });
+      this.setState({ page });
+
+      this.setState({ final: true, loading: false });
+    }
   };
 
   previous = async e => {
@@ -518,9 +557,21 @@ export default class Main extends Component {
     this.setState({ tasks: response.data, loading: false, final: false });
   };
 
-  handleEdit(taskId) {
-    console.log(taskId);
-    this.setState({ idTaskEdited: taskId });
+  handleEdit(task) {
+    console.log(task.id);
+    this.setState({ idTaskEdited: task.id });
+
+    this.setState({
+      newTask: {
+        description: task.description,
+        startedDate: task.startedDate,
+        duration: task.duration,
+        rememberTime: task.rememberTime,
+        createdDate: task.createdDate,
+        done: task.done,
+        tag: task.tag,
+      },
+    });
 
     const { displayEdit } = this.state;
 
@@ -662,13 +713,9 @@ export default class Main extends Component {
   }
 
   async handleAllDone() {
-    const { done } = this.state;
-
-    done ? this.setState({ done: false }) : this.setState({ done: true });
-
     const response = await api.get('/tasks', {
       params: {
-        done,
+        done: true,
       },
     });
 
@@ -745,6 +792,7 @@ export default class Main extends Component {
       displaySearch,
       displayChart,
       chartData,
+      chartDataBar,
       page,
       final,
       days,
@@ -951,7 +999,7 @@ export default class Main extends Component {
         </FormSearch>
 
         <FormChart displayChart={displayChart}>
-          <Chart chartData={chartData} />
+          <Chart chartData={chartData} chartDataBar={chartDataBar} />
         </FormChart>
 
         <List>
@@ -978,7 +1026,7 @@ export default class Main extends Component {
 
               <input type="text" disabled value={task.tag} />
 
-              <MdEdit size={22} onClick={() => this.handleEdit(task.id)} />
+              <MdEdit size={22} onClick={() => this.handleEdit(task)} />
 
               <MdDelete size={22} onClick={() => this.handleDelete(task)} />
             </li>

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
-  max-width: 750px;
+  max-width: 850px;
   background: #fff;
   border-radius: 4px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -15,10 +15,14 @@ const Container = styled.div`
     -webkit-transform: scale(1.025);
     -ms-transform: scale(1.025);
     transform: scale(1.025);
+
+    h1 {
+      font-size: 26px;
+    }
   }
 
   h1 {
-    font-size: 20px;
+    font-size: 23px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -26,6 +30,14 @@ const Container = styled.div`
 
     svg {
       margin-right: 10px;
+    }
+
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      color: #e54d3f;
+      -webkit-transform: scale(1.025);
+      -ms-transform: scale(1.025);
+      transform: scale(1.025);
     }
   }
 `;

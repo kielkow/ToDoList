@@ -1,54 +1,104 @@
 {
   "tasks": [
     {
-      "description": "task 1",
+      "description": "HomeWork 1",
       "startedDate": "3/6/2019",
       "duration": "1h",
-      "rememberTime": "1h",
+      "rememberTime": "5h",
       "createdDate": "1/6/2019",
       "done": false,
-      "tag": "#tag1",
+      "tag": "school",
       "id": 1
     },
     {
-      "description": "task 2",
-      "startedDate": "3/6/2019",
-      "duration": "1h",
-      "rememberTime": "1h",
+      "description": "Job Interview",
+      "startedDate": "8/6/2019",
+      "duration": "2h",
+      "rememberTime": "8h",
       "createdDate": "1/6/2019",
       "done": false,
-      "tag": "#tag2",
+      "tag": "job",
       "id": 2
     },
     {
-      "description": "task 3",
-      "startedDate": "3/6/2019",
-      "duration": "1h",
-      "rememberTime": "1h",
+      "description": "Mother birthday",
+      "startedDate": "10/6/2019",
+      "duration": "4h",
+      "rememberTime": "24h",
       "createdDate": "1/6/2019",
       "done": false,
-      "tag": "#tag3",
+      "tag": "family",
       "id": 3
     },
     {
-      "description": "task 4",
+      "description": "HomeWork 2",
       "startedDate": "3/6/2019",
       "duration": "1h",
-      "rememberTime": "1h",
+      "rememberTime": "5h",
       "createdDate": "1/6/2019",
       "done": false,
-      "tag": "#tag4",
+      "tag": "school",
       "id": 4
     },
     {
-      "description": "task 5",
-      "startedDate": "3/6/2019",
+      "description": "Father birthday",
+      "startedDate": "12/8/2019",
       "duration": "1h",
-      "rememberTime": "1h",
+      "rememberTime": "4h",
+      "createdDate": "1/8/2019",
+      "done": false,
+      "tag": "family",
+      "id": 5
+    },
+    {
+      "description": "Fix bug 1",
+      "startedDate": "8/6/2019",
+      "duration": "1h",
+      "rememberTime": "2h",
       "createdDate": "1/6/2019",
       "done": false,
-      "tag": "#tag5",
-      "id": 5
+      "tag": "job",
+      "id": 6
+    },
+    {
+      "description": "HomeWork 3",
+      "startedDate": "9/8/2019",
+      "duration": "1h",
+      "rememberTime": "4h",
+      "createdDate": "1/6/2019",
+      "done": false,
+      "tag": "school",
+      "id": 7
+    },
+    {
+      "description": "Fix bug 2",
+      "startedDate": "12/7/2019",
+      "duration": "3h",
+      "rememberTime": "12h",
+      "createdDate": "9/7/2019",
+      "done": false,
+      "tag": "job",
+      "id": 8
+    },
+    {
+      "description": "TCC´s friend",
+      "startedDate": "3/1/2020",
+      "duration": "3h",
+      "rememberTime": "12h",
+      "createdDate": "4/10/2019",
+      "done": false,
+      "tag": "friends",
+      "id": 9
+    },
+    {
+      "description": "Fix bug 3",
+      "startedDate": "2/9/2019",
+      "duration": "2h",
+      "rememberTime": "5h",
+      "createdDate": "1/8/2019",
+      "done": false,
+      "tag": "job",
+      "id": 10
     }
   ]
 }

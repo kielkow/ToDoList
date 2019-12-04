@@ -257,17 +257,15 @@ export const SaveButton = styled.button.attrs(props => ({
 `;
 
 export const HeaderList = styled.div`
-  display: inline-block;
   color: #000;
   font-size: 16px;
   font-weight: bold;
   margin-top: 15px;
-  margin-right: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-right: 130px;
   margin-left: 40px;
-
-  span {
-    margin-right: 27px;
-  }
 `;
 
 export const List = styled.ul`
@@ -296,7 +294,7 @@ export const List = styled.ul`
       border-radius: 4px;
       color: #000;
       padding: 6px;
-      width: 70px;
+      width: 100px;
     }
 
     svg {
@@ -431,7 +429,7 @@ export const SearchAllDoneButton = styled.button.attrs(props => ({
   width: 150px;
   height: 40px;
   border-radius: 4px;
-  margin-left: 100px;
+  margin-left: 200px;
   color: #fff;
   font-size: 16px;
   font-weight: bold;
