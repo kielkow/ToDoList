@@ -1,14 +1,14 @@
 {
   "tasks": [
     {
-      "id": 1,
-      "description": "HomeWork English",
-      "startedDate": "3/8/2019",
-      "duration": "2h",
-      "rememberTime": "6h",
-      "createdDate": "31/7/2019",
+      "description": "HomeWork 1",
+      "startedDate": "3/6/2019",
+      "duration": "1h",
+      "rememberTime": "5h",
+      "createdDate": "1/6/2019",
       "done": false,
-      "tag": "school"
+      "tag": "school",
+      "id": 1
     },
     {
       "description": "Job Interview",
@@ -31,14 +31,14 @@
       "id": 3
     },
     {
-      "id": 4,
-      "description": "HomeWork 4",
-      "startedDate": "3/8/2019",
-      "duration": "2h",
-      "rememberTime": "8h",
+      "description": "HomeWork 2",
+      "startedDate": "3/6/2019",
+      "duration": "1h",
+      "rememberTime": "5h",
       "createdDate": "1/6/2019",
       "done": false,
-      "tag": "school english"
+      "tag": "school",
+      "id": 4
     },
     {
       "description": "Father birthday",
@@ -91,24 +91,14 @@
       "id": 9
     },
     {
-      "id": 10,
       "description": "Fix bug 3",
       "startedDate": "2/9/2019",
       "duration": "2h",
       "rememberTime": "5h",
       "createdDate": "1/8/2019",
-      "done": true,
-      "tag": "job"
-    },
-    {
-      "description": "Batata",
-      "startedDate": "3/8/2019",
-      "duration": "1h",
-      "rememberTime": "1h",
-      "createdDate": "1/8/2019",
       "done": false,
-      "tag": "batata",
-      "id": 11
+      "tag": "job",
+      "id": 10
     }
   ]
 }

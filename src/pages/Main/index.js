@@ -442,6 +442,7 @@ export default class Main extends Component {
         done: false,
         tag: '',
       },
+      error: false,
     });
 
     const { displayAdd } = this.state;
@@ -463,6 +464,19 @@ export default class Main extends Component {
 
   showFormSearch = e => {
     e.preventDefault();
+
+    this.setState({
+      newTask: {
+        description: '',
+        startedDate: '',
+        duration: '',
+        rememberTime: '',
+        createdDate: '',
+        done: false,
+        tag: '',
+      },
+      error: false,
+    });
 
     const { displaySearch } = this.state;
 
@@ -571,6 +585,7 @@ export default class Main extends Component {
         done: task.done,
         tag: task.tag,
       },
+      error: false,
     });
 
     const { displayEdit } = this.state;
@@ -643,6 +658,46 @@ export default class Main extends Component {
       console.log(response);
 
       this.setState({ tasks: response.data });
+    }
+  }
+
+  async handleSearchByDescription() {
+    try {
+      const { newTask } = this.state;
+
+      console.log(newTask.description);
+
+      if (newTask.description === '')
+        throw new Error('Field search by description is empty');
+
+      const response = await api.get('/tasks', {
+        params: {
+          description: newTask.description,
+        },
+      });
+      console.log(response);
+
+      if (response.data.length !== 0) {
+        this.setState({ tasks: response.data });
+      } else {
+        this.setState({ tasks: [] });
+        throw new Error('Task not found');
+      }
+    } catch (err) {
+      console.log(err);
+      this.setState({
+        newTask: {
+          description: '',
+          startedDate: '',
+          duration: '',
+          rememberTime: '',
+          createdDate: '',
+          done: false,
+          tag: '',
+        },
+        loading: false,
+        error: true,
+      });
     }
   }
 
@@ -947,12 +1002,7 @@ export default class Main extends Component {
             <select onChange={this.handleChangeDay}>
               <option value="">None</option>
               {days.map(day => (
-                <option
-                  value={day}
-                  onChange={this.handleInputChangeDescription}
-                >
-                  {day}
-                </option>
+                <option value={day}>{day}</option>
               ))}
             </select>
 
@@ -980,6 +1030,20 @@ export default class Main extends Component {
               ))}
             </select>
             <MdSearch size={28} onClick={() => this.handleSearch()} />
+          </div>
+
+          <div>
+            <Input
+              type="text"
+              placeholder="Description..."
+              value={newTask.description}
+              onChange={this.handleInputChangeDescription}
+              error={error}
+            />
+            <MdSearch
+              size={28}
+              onClick={() => this.handleSearchByDescription()}
+            />
           </div>
 
           <div>
