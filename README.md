@@ -5,4 +5,4 @@ Para rodar o json-server, uma fake api para desenvovimento do projeto, deve se e
 
 Para iniciar o sistema basta entrar na pasta do mesmo e rodar o comando "yarn start" ou "npm start". Ele ficará em execução na porta 3000.
 
-* Não esquecer de baixar as dependencias antes de rodar o sistema. Para isto basta dar "yarn" ou "npm install".
+* Não esquecer de baixar as dependencias antes de rodar o sistema. Para isto basta dar "yarn" ou "npm install".*
