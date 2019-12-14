@@ -53,7 +53,6 @@ export const FormSearch = styled.form.attrs(props => ({
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 10px;
 
     span {
       font-size: 16px;
@@ -79,6 +78,7 @@ export const FormSearch = styled.form.attrs(props => ({
     & + div {
       border-top: 1px solid #eee;
       padding-top: 15px;
+      margin-top: 10px;
     }
   }
 

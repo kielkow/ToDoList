@@ -12,8 +12,15 @@ import {
 } from 'react-icons/fa';
 import { MdEdit, MdDelete, MdSearch, MdDoneAll } from 'react-icons/md';
 import { GoGraph } from 'react-icons/go';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 
-// import { startOfWeek, endOfWeek } from 'date-fns';
+import { format, getMinutes, getHours } from 'date-fns';
 
 import api from '../../services/api';
 
@@ -46,19 +53,15 @@ export default class Main extends Component {
   state = {
     newTask: {
       description: '',
-      startedDate: '',
-      duration: '',
-      rememberTime: '',
-      createdDate: '',
+      startedDate: format(new Date(), 'MM/dd/yyyy'),
+      duration: `${getHours(new Date())}:${getMinutes(new Date())}`,
+      rememberTime: `${getHours(new Date())}:${getMinutes(new Date())}`,
+      createdDate: format(new Date(), 'MM/dd/yyyy'),
       done: false,
       tag: '',
     },
-    newSearch: {
-      day: '',
-      month: '',
-      year: '',
-      tag: '',
-    },
+    newSearch: format(new Date(), 'MM/dd/yyyy'),
+    newSearchByTag: '',
     tasks: [],
     tags: [],
     loading: false,
@@ -73,41 +76,6 @@ export default class Main extends Component {
     page: 1,
     limit: 5,
     final: false,
-    days: [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      16,
-      17,
-      18,
-      19,
-      20,
-      21,
-      22,
-      23,
-      24,
-      25,
-      26,
-      27,
-      28,
-      29,
-      30,
-      31,
-    ],
-    months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    years: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019],
     chartData: {
       labels: ['Done', 'Not Done'],
       datasets: [
@@ -161,15 +129,8 @@ export default class Main extends Component {
       api.get('/tasks'),
     ]);
 
-    console.log(done.data);
-    console.log(notDone.data);
-    console.log(tasks.data);
-    console.log(tags.data);
-
     this.setState({ done: done.data.length });
-    console.log(this.state.done);
     this.setState({ notDone: notDone.data.length });
-    console.log(this.state.notDone);
 
     this.setChartData();
 
@@ -181,10 +142,12 @@ export default class Main extends Component {
     const tagsData = tags.data.map(task => task.tag);
     const noRepeatedTags = [...new Set(tagsData)];
     console.log(noRepeatedTags);
-    this.setState({ tags: noRepeatedTags });
+    const noEmptyTags = noRepeatedTags.filter((tag) => tag !== undefined);
+    console.log(noEmptyTags);
+    this.setState({ tags: noEmptyTags });
 
     Notification.requestPermission().then(result => {
-      console.log(result);
+      console.log(`Notification permission: ${result}`);
     });
   }
 
@@ -244,6 +207,7 @@ export default class Main extends Component {
         rememberTime: this.state.newTask.rememberTime,
         createdDate: this.state.newTask.createdDate,
         done: false,
+        tag: this.state.newTask.tag
       },
     });
   };
@@ -252,11 +216,12 @@ export default class Main extends Component {
     this.setState({
       newTask: {
         description: this.state.newTask.description,
-        startedDate: e.target.value,
+        startedDate: format(e, 'MM/dd/yyyy'),
         duration: this.state.newTask.duration,
         rememberTime: this.state.newTask.rememberTime,
         createdDate: this.state.newTask.createdDate,
         done: false,
+        tag: this.state.newTask.tag
       },
     });
   };
@@ -270,6 +235,7 @@ export default class Main extends Component {
         rememberTime: this.state.newTask.rememberTime,
         createdDate: this.state.newTask.createdDate,
         done: false,
+        tag: this.state.newTask.tag
       },
     });
   };
@@ -283,6 +249,7 @@ export default class Main extends Component {
         rememberTime: e.target.value,
         createdDate: this.state.newTask.createdDate,
         done: false,
+        tag: this.state.newTask.tag
       },
     });
   };
@@ -294,8 +261,9 @@ export default class Main extends Component {
         startedDate: this.state.newTask.startedDate,
         duration: this.state.newTask.duration,
         rememberTime: this.state.newTask.rememberTime,
-        createdDate: e.target.value,
+        createdDate: format(e, 'MM/dd/yyyy'),
         done: false,
+        tag: this.state.newTask.tag
       },
     });
   };
@@ -357,10 +325,10 @@ export default class Main extends Component {
         tasks: [...tasks, data],
         newTask: {
           description: '',
-          startedDate: '',
-          duration: '',
-          rememberTime: '',
-          createdDate: '',
+          startedDate: format(new Date(), 'MM/dd/yyyy'),
+          duration: `${getHours(new Date())}:${getMinutes(new Date())}`,
+          rememberTime: `${getHours(new Date())}:${getMinutes(new Date())}`,
+          createdDate: format(new Date(), 'MM/dd/yyyy'),
           done: false,
           tag: '',
         },
@@ -372,10 +340,10 @@ export default class Main extends Component {
       this.setState({
         newTask: {
           description: '',
-          startedDate: '',
-          duration: '',
-          rememberTime: '',
-          createdDate: '',
+          startedDate: format(new Date(), 'MM/dd/yyyy'),
+          duration: `${getHours(new Date())}:${getMinutes(new Date())}`,
+          rememberTime: `${getHours(new Date())}:${getMinutes(new Date())}`,
+          createdDate: format(new Date(), 'MM/dd/yyyy'),
           done: false,
           tag: '',
         },
@@ -385,48 +353,15 @@ export default class Main extends Component {
     }
   };
 
-  handleChangeDay = async e => {
+  handleChangeSearchDate = e => {
     this.setState({
-      newSearch: {
-        day: e.target.value,
-        month: this.state.newSearch.month,
-        year: this.state.newSearch.year,
-        tag: this.state.newSearch.tag,
-      },
+      newSearch: format(e, 'MM/dd/yyyy'),
     });
-  };
-
-  handleChangeMonth = async e => {
-    this.setState({
-      newSearch: {
-        day: this.state.newSearch.day,
-        month: e.target.value,
-        year: this.state.newSearch.year,
-        tag: this.state.newSearch.tag,
-      },
-    });
-  };
-
-  handleChangeYear = e => {
-    this.setState({
-      newSearch: {
-        day: this.state.newSearch.day,
-        month: this.state.newSearch.month,
-        year: e.target.value,
-        tag: this.state.newSearch.tag,
-      },
-    });
+    console.log(this.state.newSearch);
   };
 
   handleChangeTag = e => {
-    this.setState({
-      newSearch: {
-        day: this.state.newSearch.day,
-        month: this.state.newSearch.month,
-        year: this.state.newSearch.year,
-        tag: e.target.value,
-      },
-    });
+    this.setState({ newSearchByTag: e.target.value });
   };
 
   showFormAdd = e => {
@@ -435,10 +370,10 @@ export default class Main extends Component {
     this.setState({
       newTask: {
         description: '',
-        startedDate: '',
-        duration: '',
-        rememberTime: '',
-        createdDate: '',
+        startedDate: this.state.newTask.startedDate,
+        duration: this.state.newTask.duration,
+        rememberTime: this.state.newTask.rememberTime,
+        createdDate: this.state.newTask.createdDate,
         done: false,
         tag: '',
       },
@@ -468,10 +403,10 @@ export default class Main extends Component {
     this.setState({
       newTask: {
         description: '',
-        startedDate: '',
-        duration: '',
-        rememberTime: '',
-        createdDate: '',
+        startedDate: format(new Date(), 'MM/dd/yyyy'),
+        duration: `${getHours(new Date())}:${getMinutes(new Date())}`,
+        rememberTime: `${getHours(new Date())}:${getMinutes(new Date())}`,
+        createdDate: format(new Date(), 'MM/dd/yyyy'),
         done: false,
         tag: '',
       },
@@ -606,6 +541,7 @@ export default class Main extends Component {
   }
 
   async handleConfirmEdit() {
+    console.log(this.state.newTask.tag);
     // eslint-disable-next-line no-alert
     const confirmDone = window.confirm('Do you want edit this task?');
     const { idTaskEdited } = this.state;
@@ -627,36 +563,6 @@ export default class Main extends Component {
         },
       });
       console.log(response);
-      this.setState({ tasks: response.data });
-    }
-  }
-
-  async handleSearch() {
-    const { newSearch } = this.state;
-
-    console.log(newSearch);
-
-    if (
-      newSearch.day === '' &&
-      newSearch.month === '' &&
-      newSearch.year === ''
-    ) {
-      const response = await api.get('/tasks', {
-        params: {
-          tag: newSearch.tag,
-        },
-      });
-      console.log(response);
-
-      this.setState({ tasks: response.data });
-    } else {
-      const response = await api.get('/tasks', {
-        params: {
-          startedDate: `${newSearch.day}/${newSearch.month}/${newSearch.year}`,
-        },
-      });
-      console.log(response);
-
       this.setState({ tasks: response.data });
     }
   }
@@ -699,6 +605,36 @@ export default class Main extends Component {
         error: true,
       });
     }
+  }
+
+  async handleSearchByDate() {
+    const { newSearch } = this.state;
+
+    console.log(newSearch);
+
+    const response = await api.get('/tasks', {
+      params: {
+        startedDate: `${newSearch}`,
+      },
+    });
+    console.log(response);
+
+    this.setState({ tasks: response.data });
+  }
+
+  async handleSearchByTag() {
+    const { newSearchByTag } = this.state;
+
+    console.log(newSearchByTag);
+
+    const response = await api.get('/tasks', {
+      params: {
+        tag: `${newSearchByTag}`,
+      },
+    });
+    console.log(response);
+
+    this.setState({ tasks: response.data });
   }
 
   async handleSearchToday() {
@@ -839,6 +775,7 @@ export default class Main extends Component {
   render() {
     const {
       newTask,
+      newSearch,
       tasks,
       loading,
       error,
@@ -850,9 +787,6 @@ export default class Main extends Component {
       chartDataBar,
       page,
       final,
-      days,
-      months,
-      years,
       tags,
     } = this.state;
 
@@ -890,49 +824,97 @@ export default class Main extends Component {
         </Form>
 
         <FormAdd onSubmit={this.handleSubmit} displayAdd={displayAdd}>
-          <Input
-            type="text"
-            placeholder="Description..."
-            value={newTask.description}
-            onChange={this.handleInputChangeDescription}
-            error={error}
-          />
-          <Input
-            type="text"
-            placeholder="Started date..."
-            value={newTask.startedDate}
-            onChange={this.handleInputChangeStartedDate}
-            error={error}
-          />
-          <Input
-            type="text"
-            placeholder="Duration..."
-            value={newTask.duration}
-            onChange={this.handleInputChangeDuration}
-            error={error}
-          />
-          <Input
-            type="text"
-            placeholder="Remember time..."
-            value={newTask.rememberTime}
-            onChange={this.handleInputChangeRememberTime}
-            error={error}
-          />
-          <Input
-            type="text"
-            placeholder="Created date..."
-            value={newTask.createdDate}
-            onChange={this.handleInputChangeCreatedDate}
-            error={error}
-          />
-          <Input
-            type="text"
-            placeholder="#..."
-            value={newTask.tag}
-            onChange={this.handleInputChangeTag}
-            error={error}
-          />
-          <SaveButton loading={loading} onClick={this.handleSubmit}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <Grid container direction="column" style={{ width: 170 }}>
+              <TextField
+                id="description"
+                value={newTask.description}
+                onChange={this.handleInputChangeDescription}
+                label="Description"
+                type="text"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                error={error}
+              />
+              <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="startedDate"
+                value={newTask.startedDate}
+                onChange={this.handleInputChangeStartedDate}
+                label="Started Date"
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+                style={{ marginTop: 20 }}
+              />
+              <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="createdDate"
+                value={newTask.createdDate}
+                onChange={this.handleInputChangeCreatedDate}
+                label="Created Date"
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+                style={{ marginTop: 20 }}
+              />
+              <TextField
+                id="remember"
+                value={newTask.rememberTime}
+                onChange={this.handleInputChangeRememberTime}
+                label="Remember"
+                type="time"
+                defaultValue="07:30"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  step: 300, // 5 min
+                }}
+                style={{ marginTop: 20 }}
+              />
+              <TextField
+                id="time"
+                value={newTask.duration}
+                onChange={this.handleInputChangeDuration}
+                label="Duration"
+                type="time"
+                defaultValue="01:00"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  step: 300, // 5 min
+                }}
+                style={{ marginTop: 20 }}
+              />
+              <TextField
+                id="tag"
+                value={newTask.tag}
+                onChange={this.handleInputChangeTag}
+                label="Tag"
+                type="text"
+                defaultValue=""
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                style={{ marginTop: 20 }}
+                error={error}
+              />
+            </Grid>
+          </MuiPickersUtilsProvider>
+          <SaveButton
+            loading={loading}
+            onClick={this.handleSubmit}
+            style={{ marginTop: 20 }}
+          >
             {loading ? (
               <FaSpinner color="#FFF" size={14} />
             ) : (
@@ -942,48 +924,92 @@ export default class Main extends Component {
         </FormAdd>
 
         <FormEdit displayEdit={displayEdit}>
-          <Input
-            type="text"
-            placeholder="Description..."
-            value={newTask.description}
-            onChange={this.handleInputChangeDescription}
-            error={error}
-          />
-          <Input
-            type="text"
-            placeholder="Started date..."
-            value={newTask.startedDate}
-            onChange={this.handleInputChangeStartedDate}
-            error={error}
-          />
-          <Input
-            type="text"
-            placeholder="Duration..."
-            value={newTask.duration}
-            onChange={this.handleInputChangeDuration}
-            error={error}
-          />
-          <Input
-            type="text"
-            placeholder="Remember time..."
-            value={newTask.rememberTime}
-            onChange={this.handleInputChangeRememberTime}
-            error={error}
-          />
-          <Input
-            type="text"
-            placeholder="Created date..."
-            value={newTask.createdDate}
-            onChange={this.handleInputChangeCreatedDate}
-            error={error}
-          />
-          <Input
-            type="text"
-            placeholder="#Tag..."
-            value={newTask.tag}
-            onChange={this.handleInputChangeTag}
-            error={error}
-          />
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <Grid container direction="column" style={{ width: 170 }}>
+              <TextField
+                id="description"
+                value={newTask.description}
+                onChange={this.handleInputChangeDescription}
+                label="Description"
+                type="text"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                error={error}
+              />
+              <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="startedDate"
+                value={newTask.startedDate}
+                onChange={this.handleInputChangeStartedDate}
+                label="Started Date"
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+                style={{ marginTop: 20 }}
+              />
+              <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="createdDate"
+                value={newTask.createdDate}
+                onChange={this.handleInputChangeCreatedDate}
+                label="Created Date"
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+                style={{ marginTop: 20 }}
+              />
+              <TextField
+                id="remember"
+                value={newTask.rememberTime}
+                onChange={this.handleInputChangeRememberTime}
+                label="Remember"
+                type="time"
+                defaultValue="07:30"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  step: 300, // 5 min
+                }}
+                style={{ marginTop: 20 }}
+              />
+              <TextField
+                id="time"
+                value={newTask.duration}
+                onChange={this.handleInputChangeDuration}
+                label="Duration"
+                type="time"
+                defaultValue="01:00"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  step: 300, // 5 min
+                }}
+                style={{ marginTop: 20 }}
+              />
+              <TextField
+                id="tag"
+                value={newTask.tag}
+                onChange={this.handleInputChangeTag}
+                label="Tag"
+                type="text"
+                defaultValue=""
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                style={{ marginTop: 20, marginBottom: 10 }}
+                error={error}
+              />
+            </Grid>
+          </MuiPickersUtilsProvider>
           <SaveButton
             loading={loading}
             onClick={() => this.handleConfirmEdit()}
@@ -998,30 +1024,27 @@ export default class Main extends Component {
 
         <FormSearch displaySearch={displaySearch}>
           <div>
-            <span>Day</span>
-            <select onChange={this.handleChangeDay}>
-              <option value="">None</option>
-              {days.map(day => (
-                <option value={day}>{day}</option>
-              ))}
-            </select>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <Grid container style={{ width: 300, padding: 0 }}>
+                <KeyboardDatePicker
+                  disableToolbar
+                  variant="inline"
+                  format="MM/dd/yyyy"
+                  margin="normal"
+                  value={newSearch}
+                  onChange={this.handleChangeSearchDate}
+                  id="searchDate"
+                  label="SearchDate"
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+              </Grid>
+            </MuiPickersUtilsProvider>
+            <MdSearch size={28} onClick={() => this.handleSearchByDate()} />
+          </div>
 
-            <span>Month</span>
-            <select onChange={this.handleChangeMonth}>
-              <option value="">None</option>
-              {months.map(month => (
-                <option value={month}>{month}</option>
-              ))}
-            </select>
-
-            <span>Year</span>
-            <select onChange={this.handleChangeYear}>
-              <option value="">None</option>
-              {years.map(year => (
-                <option value={year}>{year}</option>
-              ))}
-            </select>
-
+          <div>
             <span>#Tag</span>
             <select onChange={this.handleChangeTag}>
               <option value="">None</option>
@@ -1029,7 +1052,7 @@ export default class Main extends Component {
                 <option value={tag}>{tag}</option>
               ))}
             </select>
-            <MdSearch size={28} onClick={() => this.handleSearch()} />
+            <MdSearch size={28} onClick={() => this.handleSearchByTag()} />
           </div>
 
           <div>
