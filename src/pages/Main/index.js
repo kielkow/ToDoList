@@ -142,7 +142,7 @@ export default class Main extends Component {
     const tagsData = tags.data.map(task => task.tag);
     const noRepeatedTags = [...new Set(tagsData)];
     console.log(noRepeatedTags);
-    const noEmptyTags = noRepeatedTags.filter((tag) => tag !== undefined);
+    const noEmptyTags = noRepeatedTags.filter(tag => tag !== undefined);
     console.log(noEmptyTags);
     this.setState({ tags: noEmptyTags });
 
@@ -207,7 +207,7 @@ export default class Main extends Component {
         rememberTime: this.state.newTask.rememberTime,
         createdDate: this.state.newTask.createdDate,
         done: false,
-        tag: this.state.newTask.tag
+        tag: this.state.newTask.tag,
       },
     });
   };
@@ -221,7 +221,7 @@ export default class Main extends Component {
         rememberTime: this.state.newTask.rememberTime,
         createdDate: this.state.newTask.createdDate,
         done: false,
-        tag: this.state.newTask.tag
+        tag: this.state.newTask.tag,
       },
     });
   };
@@ -235,7 +235,7 @@ export default class Main extends Component {
         rememberTime: this.state.newTask.rememberTime,
         createdDate: this.state.newTask.createdDate,
         done: false,
-        tag: this.state.newTask.tag
+        tag: this.state.newTask.tag,
       },
     });
   };
@@ -249,7 +249,7 @@ export default class Main extends Component {
         rememberTime: e.target.value,
         createdDate: this.state.newTask.createdDate,
         done: false,
-        tag: this.state.newTask.tag
+        tag: this.state.newTask.tag,
       },
     });
   };
@@ -263,7 +263,7 @@ export default class Main extends Component {
         rememberTime: this.state.newTask.rememberTime,
         createdDate: format(e, 'MM/dd/yyyy'),
         done: false,
-        tag: this.state.newTask.tag
+        tag: this.state.newTask.tag,
       },
     });
   };
@@ -567,24 +567,28 @@ export default class Main extends Component {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async handleSearchByDescription() {
     try {
-      const { newTask } = this.state;
+      const tasks = await api.get('/tasks');
+      const { description } = this.state.newTask;
+      const similarTasks = [];
 
-      console.log(newTask.description);
-
-      if (newTask.description === '')
+      if (description === '')
         throw new Error('Field search by description is empty');
 
-      const response = await api.get('/tasks', {
-        params: {
-          description: newTask.description,
-        },
+      tasks.data.forEach(task => {
+        const inputDescription = task.description;
+        const expression = new RegExp(description, 'i');
+        if (expression.test(inputDescription)) {
+          similarTasks.push(task);
+        }
       });
-      console.log(response);
 
-      if (response.data.length !== 0) {
-        this.setState({ tasks: response.data });
+      this.setState({ tasks: similarTasks });
+
+      if (similarTasks.length !== 0) {
+        this.setState({ tasks: similarTasks });
       } else {
         this.setState({ tasks: [] });
         throw new Error('Task not found');
@@ -594,10 +598,10 @@ export default class Main extends Component {
       this.setState({
         newTask: {
           description: '',
-          startedDate: '',
-          duration: '',
-          rememberTime: '',
-          createdDate: '',
+          startedDate: format(new Date(), 'MM/dd/yyyy'),
+          duration: `${getHours(new Date())}:${getMinutes(new Date())}`,
+          rememberTime: `${getHours(new Date())}:${getMinutes(new Date())}`,
+          createdDate: format(new Date(), 'MM/dd/yyyy'),
           done: false,
           tag: '',
         },
@@ -660,8 +664,8 @@ export default class Main extends Component {
 
     const response = await api.get('/tasks');
 
-    const weekTasks = response.data.filter(task =>
-      (task.startedDate >= startWeek) && (task.startedDate <= endWeek)
+    const weekTasks = response.data.filter(
+      task => task.startedDate >= startWeek && task.startedDate <= endWeek
     );
 
     console.log(weekTasks);
@@ -795,7 +799,7 @@ export default class Main extends Component {
       <Container>
         <h1 onClick={() => this.handleReload()}>
           <FaTasks />
-          Taks
+          Tasks
         </h1>
 
         <Form>
