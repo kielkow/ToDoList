@@ -23,6 +23,8 @@ import {
 
 import { format, getMinutes, getHours, startOfWeek, endOfWeek } from 'date-fns';
 
+import { toast } from 'react-toastify';
+
 import api from '../../services/api';
 
 import Container from '../../components/Container';
@@ -586,8 +588,6 @@ export default class Main extends Component {
         }
       });
 
-      this.setState({ tasks: similarTasks });
-
       if (similarTasks.length !== 0) {
         this.setState({ tasks: similarTasks });
       } else {
@@ -596,6 +596,7 @@ export default class Main extends Component {
       }
     } catch (err) {
       console.log(err);
+      toast.error('Not possible search by this description');
       this.setState({
         newTask: {
           description: '',
@@ -647,9 +648,8 @@ export default class Main extends Component {
 
     const response = await api.get('/tasks', {
       params: {
-        startedDate: `${
-          today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()
-        }`,
+        startedDate: `${today.getMonth() +
+          1}/${today.getDate()}/${today.getFullYear()}`,
         done: false,
       },
     });

@@ -130,16 +130,6 @@
       "id": 14
     },
     {
-      "description": "Mackenjada",
-      "startedDate": "12/14/2019",
-      "duration": "07:00",
-      "rememberTime": "20:00",
-      "createdDate": "12/14/2019",
-      "done": false,
-      "tag": "friends",
-      "id": 15
-    },
-    {
       "id": 16,
       "description": "Meetup ReactJS",
       "startedDate": "12/19/2019",
