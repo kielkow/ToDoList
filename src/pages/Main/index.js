@@ -20,7 +20,7 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-import { format, getMinutes, getHours } from 'date-fns';
+import { format, getMinutes, getHours, startOfWeek, endOfWeek } from 'date-fns';
 
 import api from '../../services/api';
 
@@ -655,17 +655,18 @@ export default class Main extends Component {
 
   async handleSearchThisweek() {
     const today = new Date();
+    const startWeek = format(startOfWeek(today), 'MM/dd/yyyy');
+    const endWeek = format(endOfWeek(today), 'MM/dd/yyyy');
 
-    const response = await api.get('/tasks', {
-      params: {
-        startedDate: `${today.getDate()}/${today.getMonth() +
-          1}/${today.getFullYear()}`,
-      },
-    });
+    const response = await api.get('/tasks');
 
-    console.log(response);
+    const weekTasks = response.data.filter(task =>
+      (task.startedDate >= startWeek) && (task.startedDate <= endWeek)
+    );
 
-    this.setState({ tasks: response.data });
+    console.log(weekTasks);
+
+    this.setState({ tasks: weekTasks });
   }
 
   async handleSearchThisMonth() {
