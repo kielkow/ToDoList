@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable no-unused-expressions */
@@ -646,8 +647,9 @@ export default class Main extends Component {
 
     const response = await api.get('/tasks', {
       params: {
-        startedDate: `${today.getDate()}/${today.getMonth() +
-          1}/${today.getFullYear()}`,
+        startedDate: `${
+          today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()
+        }`,
         done: false,
       },
     });
@@ -683,24 +685,12 @@ export default class Main extends Component {
     const today = new Date();
     const currentMonth = today.getMonth() + 1;
 
+    // eslint-disable-next-line array-callback-return
     const tasks = data.data.filter(task => {
-      if (task.startedDate.length === 9) {
-        const monthTask = task.startedDate.slice(2, 4);
-        if (Number(monthTask) === currentMonth) {
-          return task;
-        }
-      }
-      if (task.startedDate.length > 9) {
-        const monthTask = task.startedDate.slice(3, 5);
-        if (Number(monthTask) === currentMonth) {
-          return task;
-        }
-      }
-      const monthTask = task.startedDate.slice(2, 3);
-      if (Number(monthTask) === currentMonth) {
-        return task;
-      }
-      return '';
+      let date = [];
+      date = task.startedDate.split('/');
+      const month = date[0];
+      if (month === currentMonth.toString()) return task;
     });
 
     console.log(tasks);
