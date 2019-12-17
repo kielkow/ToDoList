@@ -671,7 +671,11 @@ export default class Main extends Component {
     const startWeek = format(startOfWeek(today), 'MM/dd/yyyy');
     const endWeek = format(endOfWeek(today), 'MM/dd/yyyy');
 
-    const response = await api.get('/tasks');
+    const response = await api.get('/tasks', {
+      params: {
+        done: false,
+      },
+    });
 
     const weekTasks = response.data.filter(
       task => task.startedDate >= startWeek && task.startedDate <= endWeek
