@@ -764,14 +764,14 @@ export default class Main extends Component {
     const response = await api.get('/tasks', {
       params: {
         done: false,
-        _page: this.state.page,
-        _limit: this.state.limit,
+        _page: 1,
+        _limit: 5,
       },
     });
 
     console.log(response.data);
 
-    this.setState({ tasks: response.data });
+    this.setState({ tasks: response.data, page: 1, limit: 5, final: false });
   }
 
   render() {
