@@ -71,14 +71,14 @@
       "id": 8
     },
     {
+      "id": 9,
       "description": "TCC´s friend",
       "startedDate": "12/01/2020",
-      "duration": "3h",
+      "duration": "02:00",
       "rememberTime": "12h",
       "createdDate": "11/10/2019",
       "done": false,
-      "tag": "friends",
-      "id": 9
+      "tag": "friends"
     },
     {
       "id": 10,
@@ -148,6 +148,16 @@
       "createdDate": "12/14/2019",
       "done": true,
       "tag": "casa"
+    },
+    {
+      "id": 18,
+      "description": "Teste",
+      "startedDate": "12/17/2019",
+      "duration": "01:30",
+      "rememberTime": "12/18/2019 09:30",
+      "createdDate": "12/17/2019",
+      "done": false,
+      "tag": "testando"
     }
   ]
 }

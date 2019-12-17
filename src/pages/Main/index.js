@@ -19,6 +19,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
+  KeyboardDateTimePicker,
 } from '@material-ui/pickers';
 
 import { format, getMinutes, getHours, startOfWeek, endOfWeek } from 'date-fns';
@@ -58,7 +59,7 @@ export default class Main extends Component {
       description: '',
       startedDate: format(new Date(), 'MM/dd/yyyy'),
       duration: `${getHours(new Date())}:${getMinutes(new Date())}`,
-      rememberTime: `${getHours(new Date())}:${getMinutes(new Date())}`,
+      rememberTime: format(new Date(), 'MM/dd/yyyy HH:mm'),
       createdDate: format(new Date(), 'MM/dd/yyyy'),
       done: false,
       tag: '',
@@ -249,7 +250,7 @@ export default class Main extends Component {
         description: this.state.newTask.description,
         startedDate: this.state.newTask.startedDate,
         duration: this.state.newTask.duration,
-        rememberTime: e.target.value,
+        rememberTime: format(e, 'MM/dd/yyyy HH:mm'),
         createdDate: this.state.newTask.createdDate,
         done: false,
         tag: this.state.newTask.tag,
@@ -330,7 +331,7 @@ export default class Main extends Component {
           description: '',
           startedDate: format(new Date(), 'MM/dd/yyyy'),
           duration: `${getHours(new Date())}:${getMinutes(new Date())}`,
-          rememberTime: `${getHours(new Date())}:${getMinutes(new Date())}`,
+          rememberTime: format(new Date(), 'MM/dd/yyyy HH:mm'),
           createdDate: format(new Date(), 'MM/dd/yyyy'),
           done: false,
           tag: '',
@@ -346,7 +347,7 @@ export default class Main extends Component {
           description: '',
           startedDate: format(new Date(), 'MM/dd/yyyy'),
           duration: `${getHours(new Date())}:${getMinutes(new Date())}`,
-          rememberTime: `${getHours(new Date())}:${getMinutes(new Date())}`,
+          rememberTime: format(new Date(), 'MM/dd/yyyy HH:mm'),
           createdDate: format(new Date(), 'MM/dd/yyyy'),
           done: false,
           tag: '',
@@ -409,7 +410,7 @@ export default class Main extends Component {
         description: '',
         startedDate: format(new Date(), 'MM/dd/yyyy'),
         duration: `${getHours(new Date())}:${getMinutes(new Date())}`,
-        rememberTime: `${getHours(new Date())}:${getMinutes(new Date())}`,
+        rememberTime: format(new Date(), 'MM/dd/yyyy HH:mm'),
         createdDate: format(new Date(), 'MM/dd/yyyy'),
         done: false,
         tag: '',
@@ -510,6 +511,38 @@ export default class Main extends Component {
     this.setState({ tasks: response.data, loading: false, final: false });
   };
 
+  handleConfirmEdit = async e => {
+    e.preventDefault();
+    this.setState({ loading: true });
+    const { page } = this.state;
+    console.log(this.state.newTask.tag);
+    // eslint-disable-next-line no-alert
+    const confirmDone = window.confirm('Do you want edit this task?');
+    const { idTaskEdited } = this.state;
+    console.log(this.state.newTask);
+    if (confirmDone) {
+      await api.put(`/tasks/${idTaskEdited}`, {
+        id: idTaskEdited,
+        description: this.state.newTask.description,
+        startedDate: this.state.newTask.startedDate,
+        duration: this.state.newTask.duration,
+        rememberTime: this.state.newTask.rememberTime,
+        createdDate: this.state.newTask.createdDate,
+        done: false,
+        tag: this.state.newTask.tag,
+      });
+      const response = await api.get('/tasks', {
+        params: {
+          done: false,
+          _page: page,
+          _limit: 5,
+        },
+      });
+      console.log(response.data);
+      this.setState({ tasks: response.data, loading: false, error: false });
+    }
+  };
+
   handleEdit(task) {
     console.log(task.id);
     this.setState({ idTaskEdited: task.id });
@@ -542,33 +575,6 @@ export default class Main extends Component {
           displayChart: false,
           displayEdit: true,
         });
-  }
-
-  async handleConfirmEdit() {
-    console.log(this.state.newTask.tag);
-    // eslint-disable-next-line no-alert
-    const confirmDone = window.confirm('Do you want edit this task?');
-    const { idTaskEdited } = this.state;
-    console.log(this.state.newTask);
-    if (confirmDone) {
-      await api.put(`/tasks/${idTaskEdited}`, {
-        id: idTaskEdited,
-        description: this.state.newTask.description,
-        startedDate: this.state.newTask.startedDate,
-        duration: this.state.newTask.duration,
-        rememberTime: this.state.newTask.rememberTime,
-        createdDate: this.state.newTask.createdDate,
-        done: false,
-        tag: this.state.newTask.tag,
-      });
-      const response = await api.get('/tasks', {
-        params: {
-          done: false,
-        },
-      });
-      console.log(response);
-      this.setState({ tasks: response.data });
-    }
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -821,7 +827,7 @@ export default class Main extends Component {
 
         <FormAdd onSubmit={this.handleSubmit} displayAdd={displayAdd}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container direction="column" style={{ width: 170 }}>
+            <Grid container direction="column" style={{ width: 200 }}>
               <TextField
                 id="description"
                 value={newTask.description}
@@ -861,18 +867,17 @@ export default class Main extends Component {
                 }}
                 style={{ marginTop: 20 }}
               />
-              <TextField
+              <KeyboardDateTimePicker
+                variant="inline"
+                ampm={false}
                 id="remember"
+                label="Remember"
                 value={newTask.rememberTime}
                 onChange={this.handleInputChangeRememberTime}
-                label="Remember"
-                type="time"
-                defaultValue="07:30"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  step: 300, // 5 min
+                onError={console.log}
+                format="MM/dd/yyyy HH:mm"
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
                 }}
                 style={{ marginTop: 20 }}
               />
@@ -919,7 +924,7 @@ export default class Main extends Component {
           </SaveButton>
         </FormAdd>
 
-        <FormEdit displayEdit={displayEdit}>
+        <FormEdit onSubmit={this.handleConfirmEdit} displayEdit={displayEdit}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Grid container direction="column" style={{ width: 170 }}>
               <TextField
@@ -961,18 +966,17 @@ export default class Main extends Component {
                 }}
                 style={{ marginTop: 20 }}
               />
-              <TextField
+              <KeyboardDateTimePicker
+                variant="inline"
+                ampm={false}
                 id="remember"
+                label="Remember"
                 value={newTask.rememberTime}
                 onChange={this.handleInputChangeRememberTime}
-                label="Remember"
-                type="time"
-                defaultValue="07:30"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  step: 300, // 5 min
+                onError={console.log}
+                format="MM/dd/yyyy HH:mm"
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
                 }}
                 style={{ marginTop: 20 }}
               />
@@ -1006,10 +1010,7 @@ export default class Main extends Component {
               />
             </Grid>
           </MuiPickersUtilsProvider>
-          <SaveButton
-            loading={loading}
-            onClick={() => this.handleConfirmEdit()}
-          >
+          <SaveButton loading={loading} onClick={this.handleConfirmEdit}>
             {loading ? (
               <FaSpinner color="#FFF" size={14} />
             ) : (
