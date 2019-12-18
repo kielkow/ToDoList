@@ -2,162 +2,133 @@
   "tasks": [
     {
       "id": 1,
-      "description": "HomeWork 1",
-      "startedDate": "12/06/2019",
-      "duration": "1h",
-      "rememberTime": "5h",
-      "createdDate": "12/06/2019",
-      "done": true,
-      "tag": "school"
-    },
-    {
-      "id": 2,
-      "description": "Job Interview 2",
-      "startedDate": "12/16/2019",
-      "duration": "00:30",
-      "rememberTime": "14:00",
-      "createdDate": "11/12/2019",
-      "done": false,
-      "tag": "job"
-    },
-    {
-      "id": 3,
-      "description": "Mother birthday",
-      "startedDate": "10/07/2019",
-      "duration": "01:30",
-      "rememberTime": "12:34",
-      "createdDate": "09/10/2019",
-      "done": false,
-      "tag": "family"
-    },
-    {
-      "id": 5,
-      "description": "Father birthday",
-      "startedDate": "04/8/2019",
-      "duration": "02:30",
-      "rememberTime": "13:30",
-      "createdDate": "04/8/2019",
-      "done": false,
-      "tag": "family"
-    },
-    {
-      "id": 6,
       "description": "Fix bug 1",
-      "startedDate": "08/06/2019",
+      "startedDate": "12/17/2019 10:00",
       "duration": "02:00",
-      "rememberTime": "10:00",
-      "createdDate": "01/06/2019",
+      "rememberTime": "12/18/2019 08:30",
+      "createdDate": "12/17/2019 20:36",
       "done": false,
       "tag": "job"
-    },
-    {
-      "id": 7,
-      "description": "HomeWork 3",
-      "startedDate": "09/16/2019",
-      "duration": "01:00",
-      "rememberTime": "10:00",
-      "createdDate": "06/03/2019",
-      "done": false,
-      "tag": "school"
     },
     {
       "description": "Fix bug 2",
-      "startedDate": "12/07/2019",
-      "duration": "3h",
-      "rememberTime": "12h",
-      "createdDate": "09/07/2019",
+      "startedDate": "12/19/2019 14:30",
+      "duration": "03:00",
+      "rememberTime": "12/18/2019 18:30",
+      "createdDate": "12/17/2019 20:37",
       "done": false,
       "tag": "job",
+      "id": 2
+    },
+    {
+      "description": "Fix bug 3",
+      "startedDate": "12/20/2019 16:15",
+      "duration": "04:00",
+      "rememberTime": "12/18/2019 15:00",
+      "createdDate": "12/17/2019 20:38",
+      "done": false,
+      "tag": "job",
+      "id": 3
+    },
+    {
+      "description": "Mother birthday",
+      "startedDate": "01/07/2020 13:00",
+      "duration": "05:00",
+      "rememberTime": "01/04/2020 12:00",
+      "createdDate": "12/17/2019 20:40",
+      "done": false,
+      "tag": "family",
+      "id": 4
+    },
+    {
+      "description": "Father Birthday",
+      "startedDate": "12/28/2019 10:30",
+      "duration": "06:00",
+      "rememberTime": "12/24/2019 13:00",
+      "createdDate": "12/17/2019 20:41",
+      "done": false,
+      "tag": "family",
+      "id": 5
+    },
+    {
+      "description": "Brother Birthday",
+      "startedDate": "03/05/2020 08:00",
+      "duration": "08:00",
+      "rememberTime": "02/28/2020 18:00",
+      "createdDate": "12/17/2019 20:42",
+      "done": false,
+      "tag": "family",
+      "id": 6
+    },
+    {
+      "description": "POTA test",
+      "startedDate": "12/20/2019 19:00",
+      "duration": "03:00",
+      "rememberTime": "12/18/2019 08:00",
+      "createdDate": "12/17/2019 20:44",
+      "done": false,
+      "tag": "school",
+      "id": 7
+    },
+    {
+      "description": "OOP teste",
+      "startedDate": "12/21/2019 19:30",
+      "duration": "00:00",
+      "rememberTime": "12/19/2019 10:00",
+      "createdDate": "12/17/2019 20:45",
+      "done": false,
+      "tag": "school",
       "id": 8
     },
     {
-      "id": 9,
-      "description": "TCC´s friend",
-      "startedDate": "12/01/2020",
-      "duration": "02:00",
-      "rememberTime": "12h",
-      "createdDate": "11/10/2019",
+      "description": "DB test",
+      "startedDate": "12/22/2019 20:15",
+      "duration": "02:30",
+      "rememberTime": "12/19/2019 09:30",
+      "createdDate": "12/17/2019 20:47",
       "done": false,
-      "tag": "friends"
+      "tag": "school",
+      "id": 9
     },
     {
-      "id": 10,
-      "description": "Fix bug 3",
-      "startedDate": "02/09/2019",
-      "duration": "02:00",
-      "rememberTime": "11:00",
-      "createdDate": "01/08/2019",
-      "done": false
+      "description": "Hangout´s Gabriel",
+      "startedDate": "12/30/2019 18:00",
+      "duration": "06:00",
+      "rememberTime": "12/30/2019 12:00",
+      "createdDate": "12/17/2019 20:49",
+      "done": false,
+      "tag": "friends",
+      "id": 10
     },
     {
-      "description": "Buy PUBG",
-      "startedDate": "05/12/2019",
-      "duration": "1h",
-      "rememberTime": "12h",
-      "createdDate": "04/12/2019",
+      "description": "Amanda Birthday",
+      "startedDate": "01/04/2020 20:30",
+      "duration": "08:00",
+      "rememberTime": "01/02/2020 18:15",
+      "createdDate": "12/17/2019 20:50",
       "done": false,
-      "tag": "game",
+      "tag": "friends",
       "id": 11
     },
     {
-      "description": "Buy new book",
-      "startedDate": "7/12/2019",
-      "duration": "3h",
-      "rememberTime": "12h",
-      "createdDate": "4/12/2019",
+      "description": "Comicon",
+      "startedDate": "12/07/2019 09:00",
+      "duration": "12:00",
+      "rememberTime": "12/06/2019 18:30",
+      "createdDate": "12/17/2019 20:51",
       "done": false,
-      "tag": "book",
+      "tag": "friends",
       "id": 12
     },
     {
-      "id": 13,
-      "description": "Barbecue",
-      "startedDate": "12/15/2019",
-      "duration": "02:30",
-      "rememberTime": "10:00",
-      "createdDate": "12/14/2019",
-      "done": false,
-      "tag": "family"
-    },
-    {
-      "description": "Buy phone",
-      "startedDate": "12/16/2019",
-      "duration": "00:15",
-      "rememberTime": "10:00",
-      "createdDate": "12/14/2019",
-      "done": false,
-      "tag": "myself",
-      "id": 14
-    },
-    {
-      "id": 16,
-      "description": "Meetup ReactJS",
-      "startedDate": "12/19/2019",
-      "duration": "02:30",
-      "rememberTime": "12:00",
-      "createdDate": "12/16/2019",
-      "done": false,
-      "tag": "dev"
-    },
-    {
-      "id": 17,
-      "description": "Cortar Gramado",
-      "startedDate": "12/17/2019",
-      "duration": "01:30",
-      "rememberTime": "11:00",
-      "createdDate": "12/14/2019",
-      "done": true,
-      "tag": "casa"
-    },
-    {
-      "id": 18,
       "description": "Teste",
-      "startedDate": "12/17/2019",
-      "duration": "01:30",
-      "rememberTime": "12/18/2019 09:30",
-      "createdDate": "12/17/2019",
-      "done": true,
-      "tag": "testando"
+      "startedDate": "12/25/2019 20:30",
+      "duration": "03:00",
+      "rememberTime": "12/24/2019 23:00",
+      "createdDate": "12/17/2019 21:23",
+      "done": false,
+      "tag": "teste",
+      "id": 13
     }
   ]
 }

@@ -22,7 +22,7 @@ import {
   KeyboardDateTimePicker,
 } from '@material-ui/pickers';
 
-import { format, getMinutes, getHours, startOfWeek, endOfWeek } from 'date-fns';
+import { format, startOfWeek, endOfWeek } from 'date-fns';
 
 import { toast } from 'react-toastify';
 
@@ -57,10 +57,10 @@ export default class Main extends Component {
   state = {
     newTask: {
       description: '',
-      startedDate: format(new Date(), 'MM/dd/yyyy'),
-      duration: `${getHours(new Date())}:${getMinutes(new Date())}`,
+      startedDate: format(new Date(), 'MM/dd/yyyy HH:mm'),
+      duration: `00:00`,
       rememberTime: format(new Date(), 'MM/dd/yyyy HH:mm'),
-      createdDate: format(new Date(), 'MM/dd/yyyy'),
+      createdDate: format(new Date(), 'MM/dd/yyyy HH:mm'),
       done: false,
       tag: '',
     },
@@ -220,7 +220,7 @@ export default class Main extends Component {
     this.setState({
       newTask: {
         description: this.state.newTask.description,
-        startedDate: format(e, 'MM/dd/yyyy'),
+        startedDate: format(e, 'MM/dd/yyyy HH:mm'),
         duration: this.state.newTask.duration,
         rememberTime: this.state.newTask.rememberTime,
         createdDate: this.state.newTask.createdDate,
@@ -265,7 +265,7 @@ export default class Main extends Component {
         startedDate: this.state.newTask.startedDate,
         duration: this.state.newTask.duration,
         rememberTime: this.state.newTask.rememberTime,
-        createdDate: format(e, 'MM/dd/yyyy'),
+        createdDate: format(e, 'MM/dd/yyyy HH:mm'),
         done: false,
         tag: this.state.newTask.tag,
       },
@@ -329,10 +329,10 @@ export default class Main extends Component {
         tasks: [...tasks, data],
         newTask: {
           description: '',
-          startedDate: format(new Date(), 'MM/dd/yyyy'),
-          duration: `${getHours(new Date())}:${getMinutes(new Date())}`,
+          startedDate: format(new Date(), 'MM/dd/yyyy HH:mm'),
+          duration: '00:00',
           rememberTime: format(new Date(), 'MM/dd/yyyy HH:mm'),
-          createdDate: format(new Date(), 'MM/dd/yyyy'),
+          createdDate: format(new Date(), 'MM/dd/yyyy HH:mm'),
           done: false,
           tag: '',
         },
@@ -345,10 +345,10 @@ export default class Main extends Component {
       this.setState({
         newTask: {
           description: '',
-          startedDate: format(new Date(), 'MM/dd/yyyy'),
-          duration: `${getHours(new Date())}:${getMinutes(new Date())}`,
+          startedDate: format(new Date(), 'MM/dd/yyyy HH:mm'),
+          duration: '00:00',
           rememberTime: format(new Date(), 'MM/dd/yyyy HH:mm'),
-          createdDate: format(new Date(), 'MM/dd/yyyy'),
+          createdDate: format(new Date(), 'MM/dd/yyyy HH:mm'),
           done: false,
           tag: '',
         },
@@ -375,10 +375,10 @@ export default class Main extends Component {
     this.setState({
       newTask: {
         description: '',
-        startedDate: this.state.newTask.startedDate,
-        duration: this.state.newTask.duration,
-        rememberTime: this.state.newTask.rememberTime,
-        createdDate: this.state.newTask.createdDate,
+        startedDate: format(new Date(), 'MM/dd/yyyy HH:mm'),
+        duration: `00:00`,
+        rememberTime: format(new Date(), 'MM/dd/yyyy HH:mm'),
+        createdDate: format(new Date(), 'MM/dd/yyyy HH:mm'),
         done: false,
         tag: '',
       },
@@ -408,10 +408,10 @@ export default class Main extends Component {
     this.setState({
       newTask: {
         description: '',
-        startedDate: format(new Date(), 'MM/dd/yyyy'),
-        duration: `${getHours(new Date())}:${getMinutes(new Date())}`,
+        startedDate: format(new Date(), 'MM/dd/yyyy HH:mm'),
+        duration: '00:00',
         rememberTime: format(new Date(), 'MM/dd/yyyy HH:mm'),
-        createdDate: format(new Date(), 'MM/dd/yyyy'),
+        createdDate: format(new Date(), 'MM/dd/yyyy HH:mm'),
         done: false,
         tag: '',
       },
@@ -607,10 +607,10 @@ export default class Main extends Component {
       this.setState({
         newTask: {
           description: '',
-          startedDate: format(new Date(), 'MM/dd/yyyy'),
-          duration: `${getHours(new Date())}:${getMinutes(new Date())}`,
-          rememberTime: `${getHours(new Date())}:${getMinutes(new Date())}`,
-          createdDate: format(new Date(), 'MM/dd/yyyy'),
+          startedDate: format(new Date(), 'MM/dd/yyyy HH:mm'),
+          duration: `00:00`,
+          rememberTime: format(new Date(), 'MM/dd/yyyy HH:mm'),
+          createdDate: format(new Date(), 'MM/dd/yyyy HH:mm'),
           done: false,
           tag: '',
         },
@@ -625,14 +625,24 @@ export default class Main extends Component {
 
     console.log(newSearch);
 
-    const response = await api.get('/tasks', {
+    const data = await api.get('/tasks', {
       params: {
-        startedDate: `${newSearch}`,
+        done: false,
       },
     });
-    console.log(response);
+    console.log(data);
 
-    this.setState({ tasks: response.data });
+    // eslint-disable-next-line array-callback-return
+    const tasks = data.data.filter(task => {
+      let date = [];
+      date = task.startedDate.split(' ');
+      const startedDate = date[0];
+      if (startedDate === newSearch) return task;
+    });
+
+    console.log(tasks);
+
+    this.setState({ tasks });
   }
 
   async handleSearchByTag() {
@@ -651,25 +661,32 @@ export default class Main extends Component {
   }
 
   async handleSearchToday() {
-    const today = new Date();
-
-    const response = await api.get('/tasks', {
+    const data = await api.get('/tasks', {
       params: {
-        startedDate: `${today.getMonth() +
-          1}/${today.getDate()}/${today.getFullYear()}`,
         done: false,
       },
     });
+    console.log(data);
+    const today = new Date();
+    const currentDay = today.getDate();
 
-    console.log(response);
+    // eslint-disable-next-line array-callback-return
+    const tasks = data.data.filter(task => {
+      let date = [];
+      date = task.startedDate.split('/');
+      const day = date[1];
+      if (day === currentDay.toString()) return task;
+    });
 
-    this.setState({ tasks: response.data });
+    console.log(tasks);
+
+    this.setState({ tasks });
   }
 
   async handleSearchThisweek() {
     const today = new Date();
-    const startWeek = format(startOfWeek(today), 'MM/dd/yyyy');
-    const endWeek = format(endOfWeek(today), 'MM/dd/yyyy');
+    const startWeek = format(startOfWeek(today), 'MM/dd/yyyy HH:mm');
+    const endWeek = format(endOfWeek(today), 'MM/dd/yyyy HH:mm');
 
     const response = await api.get('/tasks', {
       params: {
@@ -775,7 +792,21 @@ export default class Main extends Component {
 
     console.log(response.data);
 
-    this.setState({ tasks: response.data, page: 1, limit: 5, final: false });
+    const tags = await api.get('/tasks');
+    console.log(tags.data);
+    const tagsData = tags.data.map(task => task.tag);
+    const noRepeatedTags = [...new Set(tagsData)];
+    console.log(noRepeatedTags);
+    const noEmptyTags = noRepeatedTags.filter(tag => tag !== undefined);
+    console.log(noEmptyTags);
+
+    this.setState({
+      tasks: response.data,
+      tags: noEmptyTags,
+      page: 1,
+      limit: 5,
+      final: false,
+    });
   }
 
   render() {
@@ -843,29 +874,29 @@ export default class Main extends Component {
                 }}
                 error={error}
               />
-              <KeyboardDatePicker
-                disableToolbar
+              <KeyboardDateTimePicker
                 variant="inline"
-                format="MM/dd/yyyy"
-                margin="normal"
+                ampm={false}
                 id="startedDate"
+                label="Started Date"
                 value={newTask.startedDate}
                 onChange={this.handleInputChangeStartedDate}
-                label="Started Date"
+                onError={console.log}
+                format="MM/dd/yyyy HH:mm"
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
                 style={{ marginTop: 20 }}
               />
-              <KeyboardDatePicker
-                disableToolbar
+              <KeyboardDateTimePicker
                 variant="inline"
-                format="MM/dd/yyyy"
-                margin="normal"
+                ampm={false}
                 id="createdDate"
+                label="Created Date"
                 value={newTask.createdDate}
                 onChange={this.handleInputChangeCreatedDate}
-                label="Created Date"
+                onError={console.log}
+                format="MM/dd/yyyy HH:mm"
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
@@ -891,7 +922,7 @@ export default class Main extends Component {
                 onChange={this.handleInputChangeDuration}
                 label="Duration"
                 type="time"
-                defaultValue="01:00"
+                defaultValue="00:00"
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -930,7 +961,7 @@ export default class Main extends Component {
 
         <FormEdit onSubmit={this.handleConfirmEdit} displayEdit={displayEdit}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container direction="column" style={{ width: 170 }}>
+            <Grid container direction="column" style={{ width: 200 }}>
               <TextField
                 id="description"
                 value={newTask.description}
@@ -942,29 +973,29 @@ export default class Main extends Component {
                 }}
                 error={error}
               />
-              <KeyboardDatePicker
-                disableToolbar
+              <KeyboardDateTimePicker
                 variant="inline"
-                format="MM/dd/yyyy"
-                margin="normal"
+                ampm={false}
                 id="startedDate"
+                label="Started Date"
                 value={newTask.startedDate}
                 onChange={this.handleInputChangeStartedDate}
-                label="Started Date"
+                onError={console.log}
+                format="MM/dd/yyyy HH:mm"
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
                 style={{ marginTop: 20 }}
               />
-              <KeyboardDatePicker
-                disableToolbar
+              <KeyboardDateTimePicker
                 variant="inline"
-                format="MM/dd/yyyy"
-                margin="normal"
+                ampm={false}
                 id="createdDate"
+                label="Created Date"
                 value={newTask.createdDate}
                 onChange={this.handleInputChangeCreatedDate}
-                label="Created Date"
+                onError={console.log}
+                format="MM/dd/yyyy HH:mm"
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
@@ -990,7 +1021,7 @@ export default class Main extends Component {
                 onChange={this.handleInputChangeDuration}
                 label="Duration"
                 type="time"
-                defaultValue="01:00"
+                defaultValue="00:00"
                 InputLabelProps={{
                   shrink: true,
                 }}
