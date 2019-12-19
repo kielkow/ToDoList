@@ -15,6 +15,10 @@ import { MdEdit, MdDelete, MdSearch, MdDoneAll } from 'react-icons/md';
 import { GoGraph } from 'react-icons/go';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
@@ -273,6 +277,9 @@ export default class Main extends Component {
   };
 
   handleInputChangeTag = e => {
+    console.log(e.target.value);
+    console.log(e);
+    console.log(typeof e.target.value);
     this.setState({
       newTask: {
         description: this.state.newTask.description,
@@ -813,6 +820,7 @@ export default class Main extends Component {
     const {
       newTask,
       newSearch,
+      newSearchByTag,
       tasks,
       loading,
       error,
@@ -1077,13 +1085,20 @@ export default class Main extends Component {
           </div>
 
           <div>
-            <span>#Tag</span>
-            <select onChange={this.handleChangeTag}>
-              <option value="">None</option>
-              {tags.map(tag => (
-                <option value={tag}>{tag}</option>
-              ))}
-            </select>
+            <FormControl>
+              <InputLabel id="demo-simple-select-label">Tag</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={newSearchByTag}
+                onChange={this.handleChangeTag}
+                style={{ width: 100 }}
+              >
+                {tags.map(tag => (
+                  <MenuItem value={tag}>{tag}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <MdSearch size={28} onClick={() => this.handleSearchByTag()} />
           </div>
 
