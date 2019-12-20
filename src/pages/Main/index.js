@@ -89,7 +89,7 @@ export default class Main extends Component {
       datasets: [
         {
           label: 'tasks',
-          data: [4, 7],
+          data: [2, 7],
           backgroundColor: [
             'rgba(54, 162, 235, 0.6)',
             'rgba(255, 99, 132, 0.6)',

@@ -294,7 +294,7 @@ export const List = styled.ul`
       border-radius: 4px;
       color: #000;
       padding: 6px;
-      width: 100px;
+      width: 125px;
     }
 
     svg {
@@ -429,7 +429,6 @@ export const SearchAllDoneButton = styled.button.attrs(props => ({
   width: 150px;
   height: 40px;
   border-radius: 4px;
-  margin-left: 200px;
   color: #fff;
   font-size: 16px;
   font-weight: bold;
